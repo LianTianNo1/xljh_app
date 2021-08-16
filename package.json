@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "uview-ui": "^1.8.4"
+    "uview-ui": "^1.8.4",
+    "vuex": "^3.6.2"
   }
 }

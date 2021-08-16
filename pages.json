@@ -4,16 +4,78 @@
 		},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index",
+			"path": "pages/todo/todo",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "todo"
 			}
+		}     
+        ,{
+            "path" : "pages/tomato/tomato",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "tomato",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+		,{
+		    "path" : "pages/user-center/user-center",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "用户中心",
+		        "enablePullDownRefresh": false
+		    }
+		    
 		}
-	],
+		,{
+            "path" : "pages/user-center/login/login",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "登录/注册",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/user-center/user-info/user-info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "用户信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"navigationStyle":"custom"
+	},
+	"tabBar": {
+		"color": "#909399",
+		"selectedColor": "#303133",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"list": [{
+				"pagePath": "pages/todo/todo",
+				"iconPath": "static/icon/listn.png",
+				"selectedIconPath": "static/icon/list.png",
+				"text": "清单"
+			},
+			{
+				"pagePath": "pages/tomato/tomato",
+				"iconPath": "static/icon/todon.png",
+				"selectedIconPath": "static/icon/todo.png",
+				"text": "番茄"
+			},
+			{
+				"pagePath": "pages/user-center/user-center",
+				"iconPath": "static/icon/myn.png",
+				"selectedIconPath": "static/icon/my.png",
+				"text": "个人"
+			}
+		]
 	}
 }
