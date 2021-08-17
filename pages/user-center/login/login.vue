@@ -155,6 +155,7 @@
 				uni.navigateBack({
 					success: (res) => {
 						this.getUser()
+						uni.removeStorageSync('userData')
 					}
 				})
 
@@ -223,10 +224,11 @@
 
 			.footer-btn {
 				padding: 40rpx;
-				width: 710rpx;
-				margin: 20rpx 20rpx;
+				width: 80%;
 				border-radius: 40rpx;
 				position: absolute;
+				left: 50%;
+				transform: translate(-50%,0);
 				bottom: 2%;
 				height: 22vh;
 				display: flex;

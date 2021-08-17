@@ -1,13 +1,17 @@
 <template>
 	<view>
-		<u-tabbar :list="tabbar.tabbar" :mid-button="true"></u-tabbar>
+		<u-tabbar @change="beforeSwitch" :list="tabbar" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
 <script>
 	import {
-		mapState
+		createNamespacedHelpers
 	} from 'vuex'
+	const {
+		mapState: tabbarState,
+		mapMutations: tabbarMutations
+	} = createNamespacedHelpers('tabbar')
 	export default {
 		data() {
 			return {
@@ -15,10 +19,13 @@
 			}
 		},
 		computed: {
-			...mapState(['tabbar'])
+			...tabbarState(['tabbar', 'todoObj']),
 		},
 		methods: {
-
+			// 切换 tabBar 调用
+			beforeSwitch() {
+				this.todoObj && this.$getUserData(this.todoObj);
+			},
 		}
 	}
 </script>

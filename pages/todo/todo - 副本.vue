@@ -1,7 +1,6 @@
 <template>
 	<view>
 		<u-navbar :is-back='false' title="任务清单"></u-navbar>
-		<u-toast ref="uToast" />
 		<view>
 			<u-modal :show-cancel-button="true" @confirm="addTodoList" title="添加任务" v-model="moShow">
 				<view class="slot-content">
@@ -17,14 +16,8 @@
 				<u-calendar v-model="show" @change="changeDate" :mode="mode"></u-calendar>
 			</view>
 			<view @click="openCalendar" class="calendar">
-				<u-icon name="arrow-down-fill" color="#00BCD4" size="28"></u-icon>
-				当前选择日期 {{ chooseTime }}
+				选择日期
 			</view>
-			<view v-if="!todoList.length" class="no-task">
-				你尚未添加任何任务<br>
-				点击 '+' 添加一个吧
-			</view>
-
 			<!-- 未完成任务 -->
 			<view v-if="nocompleted" class="todo-list">
 				<view class="task">
@@ -77,7 +70,7 @@
 		<view class="add-item" @click="moShow=true">
 			<u-icon name="plus" color="#79BEDB" size="38"></u-icon>
 		</view>
-		<u-tabbar @change="beforeSwitch" :list="tabbar" :mid-button="true"></u-tabbar>
+		<u-tabbar :list="tabbar" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
@@ -94,9 +87,6 @@
 		mapMutations: listMutations,
 		mapGetters: listGetters
 	} = createNamespacedHelpers('list')
-	const {
-		mapState: loginInfoState,
-	} = createNamespacedHelpers('loginInfo')
 	export default {
 		name: 'todo',
 		data() {
@@ -112,26 +102,12 @@
 			}
 		},
 		computed: {
-			...tabbarState(['tabbar', 'todoObj']),
-			...loginInfoState(['user']),
-			...listState(['todoList', 'userDate', 'chooseTime']),
+			...tabbarState(['tabbar']),
+			...listState(['todoList']),
 			...listGetters(['completed', 'nocompleted', 'totalcompleted'])
 		},
-		onLoad() {
-			// 获取数据
-			this.setTodoObj(this);
-			this.$getUserData(this.todoObj);
-		},
 		methods: {
-			...tabbarMutations(['setTodoObj']),
-			...listMutations(['setUserData', 'updateTime', 'updateTodoList', 'updateIsCompleted', 'deleteItem',
-				'addItem'
-			]),
-			// 切换 tabBar 调用
-			beforeSwitch() {
-				this.todoObj && this.$getUserData(this.todoObj);
-			},
-
+			...listMutations(['updateTime','updateTodoList', 'updateIsCompleted', 'deleteItem', 'addItem']),
 			// test
 			test() {
 				console.log(111111);
@@ -148,7 +124,6 @@
 			// 添加item
 			addTodoList() {
 				// 获取一个不重复的 id
-				if (!this.title.trim()) return this.$showt('error', '任务不能为空')
 				let id = this.$rd(0, 100000)
 				while (this.todoList.findIndex(item => {
 						id === item.id
@@ -163,12 +138,21 @@
 				}
 				// 调用 vuex 中添加
 				this.addItem(item)
-				// 清空 title
-				this.title = ''
 			},
-
+			
 		},
-
+		onLoad() {
+			let dateStr = this.$formatDate(new Date())
+			console.log(dateStr);
+			const _self = this;
+			// 获取数据
+			(async function() {
+				let todoList = await uni.getStorageSync('todoList')
+				if (todoList) {
+					_self.updateTodoList(todoList)
+				}
+			})()
+		}
 	}
 </script>
 
@@ -185,7 +169,7 @@
 			width: 100rpx;
 			height: 100rpx;
 			background-color: #F8F9FC;
-			box-shadow: 1px 1px 1px 1px #D0DFE6, -1px -1px 1px 1px #FAFAFA;
+			box-shadow: 1px 1px 1px 1px #D0DFE6;
 
 			display: flex;
 			justify-content: center;
@@ -196,24 +180,6 @@
 			display: flex;
 			justify-content: center;
 			flex-wrap: wrap;
-
-			.no-task {
-				width: 90vw;
-				height: 50vh;
-				margin: 10rpx 10rpx 0;
-				font-weight: bold;
-				color: #d4edf4;
-				font-size: 40rpx;
-				line-height: 1.5;
-				letter-spacing: 10rpx;
-				text-shadow: 2rpx 2rpx 0rpx #B0BEC5, -2rpx -2rpx 2rpx #FAFAFA;
-				background-color: rgb(250, 250, 250);
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				border-radius: 20rpx;
-				box-shadow: 0 2px 2px 2px #E8EAF6;
-			}
 
 			.calendar {
 				padding: 20rpx;

@@ -5,7 +5,10 @@ import store from './store/index.js'
 // 导入自定义的请求模块
 import {
 	req,
-	showToast
+	showToast,
+	rd,
+	formatDate,
+	getUserData
 } from './utils/request.js'
 // 使用 uView UI
 Vue.use(uView);
@@ -14,6 +17,9 @@ Vue.config.productionTip = false
 // 注册我们的请求模块
 Vue.prototype.$req = req
 Vue.prototype.$showt = showToast
+Vue.prototype.$rd = rd
+Vue.prototype.$formatDate = formatDate
+Vue.prototype.$getUserData = getUserData
 App.mpType = 'app'
 
 const app = new Vue({

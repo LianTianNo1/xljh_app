@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<u-navbar :is-back='false'  title="个人中心"></u-navbar>
 		<u-toast ref="uToast" />
 		<view @click="getInfo" class="headPart u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
 			<view class="u-m-r-10">
@@ -10,26 +11,21 @@
 				<view class="u-font-14 u-tips-color">账号:{{user.username?user.username:'未登录'}}</view>
 			</view>
 		</view>
-		<view> 
-			<u-modal @confirm="updateNickName"  title="修改昵称" v-model="moShow">
+		<view>
+			<u-modal :show-cancel-button="true" @confirm="updateNickName" title="修改昵称" v-model="moShow">
 				<view class="slot-content">
-					<input :style="{'boxShadow': '0px 1px 1px 0px #CFD8DC','height': '90rpx','lineHeight':'1'}" class="update-nick" type="text" v-model="nickname" />
+					<input :style="{'boxShadow': '0px 1px 1px 0px #CFD8DC','height': '90rpx','lineHeight':'1'}"
+						class="update-nick" type="text" v-model="nickname" />
 				</view>
 			</u-modal>
 		</view>
 
-		<view class="u-m-t-20">
-			<u-cell-group>
-				<u-cell-item icon="rmb-circle" title="支付"></u-cell-item>
-			</u-cell-group>
-		</view>
+
 
 		<view class="u-m-t-20">
 			<u-cell-group>
 				<u-cell-item @click="getUser" icon="star" title="收藏"></u-cell-item>
 				<u-cell-item icon="photo" title="相册"></u-cell-item>
-				<u-cell-item icon="coupon" title="卡券"></u-cell-item>
-				<u-cell-item icon="heart" title="关注"></u-cell-item>
 				<u-cell-item icon="setting" title="设置"></u-cell-item>
 			</u-cell-group>
 		</view>
@@ -39,7 +35,7 @@
 				<u-cell-item icon="error-circle" @click="logout()" title="退出账号"></u-cell-item>
 			</u-cell-group>
 		</view>
-		<u-tabbar :list="tabbar.tabbar" :mid-button="true"></u-tabbar>
+		<u-tabbar @change="beforeSwitch()" :list="tabbar" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
@@ -54,6 +50,10 @@
 		mapState: loginState,
 		mapMutations: loginMutations,
 	} = createNamespacedHelpers('loginInfo')
+	const {
+		mapState: tabbarState,
+		mapMutations: tabbarMutations
+	} = createNamespacedHelpers('tabbar')
 	export default {
 		data() {
 			return {
@@ -81,15 +81,18 @@
 		},
 		computed: {
 			...loginState(['user']),
-			...mapState(['tabbar'])
+			...tabbarState(['tabbar','todoObj']),
 		},
 
 		methods: {
-
 			...loginMutations(['updateUser']),
 			// 打开模态框
-			openModal(){
+			openModal() {
 				this.moShow = true
+			},
+			// 切换 tabBar 调用
+			beforeSwitch() {
+				this.todoObj && this.$getUserData(this.todoObj);
 			},
 			// 获取用户信息
 			async getUser() {
@@ -108,8 +111,10 @@
 				if (res.code !== 0) return this.$showt('error', res.msg)
 				this.$showt('success', res.msg);
 				this.getUser();
+				// 设置昵称 为 ''
+				this.nickname = '';
 			},
-			// 设置头像
+			// 设置头像 这个不兼容 安卓。。。
 			async setAvatar2() {
 				uniCloud.chooseAndUploadFile({
 					count: 1,
@@ -129,19 +134,40 @@
 			// 设置头像
 			async setAvatar() {
 				uni.chooseImage({
-					count:1,
+					count: 1,
 					success: (res) => {
 						console.log(res);
+						if (res.tempFilePaths.length > 0) {
+							let filePath = res.tempFilePaths[0]
+							//进行上传操作
+							const tempFiles = res.tempFiles[0]
+							const absUrl = tempFiles.path+'/'+tempFiles.name
+							console.log(absUrl);
+							uniCloud.uploadFile({
+								filePath: filePath,
+								cloudPath: 'b.jpg',
+								success: async (res2) => {
+									console.log(res2);
+									const res3 = await this.$req('setAvatar', {
+										avatar : res2.fileID
+									})
+									if (res3.code !== 0) return this.$showt('error', res3.msg)
+									this.$showt('success', res3.msg)
+									// 更新数据到本地
+									this.getUser()
+									console.log(res3);
+								},
+								fail:(err)=> {
+									console.log(err);
+									return this.$showt('error', "上传图片出错")
+								}
+							})
+							
+						}
 					}
 				})
-				/* uniCloud.uploadFile({
-					count: 1,
-					success: async (data) => {
-						const avatar = data.tempFiles[0].url
-						const res = await this.$req('setAvatar', {
-							avatar
-						})
-						// console.log(res);
+
+				/* 
 						if (res.code !== 0) return this.$showt('error', res.msg)
 						this.$showt('success', res.msg)
 						// 更新数据到本地
@@ -177,6 +203,7 @@
 				uni.removeStorageSync('uni_id_token')
 				uni.removeStorageSync('uni_id_token_expired')
 				uni.removeStorageSync('user_info')
+				uni.removeStorageSync('userData')
 				this.updateUser('')
 			}
 

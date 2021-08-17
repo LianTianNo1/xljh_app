@@ -33,7 +33,7 @@ exports.main = async (event, context) => {
 		user.uid = payload.uid
 		if (code) return payload //code 不为 0 代表token 未通过
 	}
-	uniCloud.logger.log(payload.uid)
+	// uniCloud.logger.log(payload.uid)
 
 
 	switch (action) {
@@ -43,6 +43,20 @@ exports.main = async (event, context) => {
 			    uid: user.uid,
 			    nickname: params.nickname
 			  })
+			break;
+		}
+		// 保存数据
+		case 'savaUserData': {
+			res = await uniID.updateUser({
+			    uid: user.uid,
+			    userData: params.userData
+			  })
+			break;
+		}
+		// 获取 TodoList 数据
+		case 'getUserData': {
+			// uniCloud.logger.log(params.username)
+			res = await collection.where({username:params.username}).field('userData').get()
 			break;
 		}
 		// 设置头像

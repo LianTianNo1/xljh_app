@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 // 引入 tabbar login
 import tabbar from '../module/tabbar.js'
 import loginInfo from '../module/loginInfo.js'
+import list from '../module/list.js'
 
 // 把 Vuex 注册到Vue 上
 Vue.use(Vuex)
@@ -23,6 +24,7 @@ export default new Vuex.Store({
 	// 用来挂载模块
 	modules: {
 		tabbar,
-		loginInfo
+		loginInfo,
+		list
 	}
 })
