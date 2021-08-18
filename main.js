@@ -8,7 +8,8 @@ import {
 	showToast,
 	rd,
 	formatDate,
-	getUserData
+	getUserData,
+	uploadData
 } from './utils/request.js'
 // 使用 uView UI
 Vue.use(uView);
@@ -20,6 +21,7 @@ Vue.prototype.$showt = showToast
 Vue.prototype.$rd = rd
 Vue.prototype.$formatDate = formatDate
 Vue.prototype.$getUserData = getUserData
+Vue.prototype.$uploadData = uploadData
 App.mpType = 'app'
 
 const app = new Vue({

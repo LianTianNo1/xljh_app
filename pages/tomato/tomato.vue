@@ -32,9 +32,9 @@
 		methods: {
 			// 切换 tabBar 调用
 			beforeSwitch() {
-				let usrInfo = uni.getStorageSync('user_info')
+				/* let usrInfo = uni.getStorageSync('user_info')
 				usrInfo && uni.removeStorageSync('userData')
-				this.todoObj && this.$getUserData(this.todoObj);
+				this.todoObj && this.$getUserData(this.todoObj); */
 			},
 		},
 		components: {

@@ -12,7 +12,7 @@
 			</view>
 		</view>
 		<view>
-			<u-modal :show-cancel-button="true" @confirm="updateNickName" title="修改昵称" v-model="moShow">
+			<u-modal :show-cancel-button="true" @confirm="updateNickName" title="修改昵称" v-model="modalShow">
 				<view class="slot-content">
 					<input
 						:style="{'boxShadow': '0px 1px 1px 0px #CFD8DC','borderRadius':'50rpx','textAlign':'center','height': '90rpx','lineHeight':'1'}"
@@ -20,12 +20,15 @@
 				</view>
 			</u-modal>
 		</view>
-
+		<view>
+			<u-modal content="退出将清空本地数据,请确认已经上传"  :show-cancel-button="true" @confirm="confirmLogout" title="确认退出" v-model="logoutShow">
+			</u-modal>
+		</view>
 
 
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<u-cell-item @click="getUser" icon="star" title="收藏"></u-cell-item>
+				<u-cell-item @click="uploadUserData" icon="info" title="上传数据"></u-cell-item>
 				<u-cell-item icon="photo" title="相册"></u-cell-item>
 				<u-cell-item icon="setting" title="设置"></u-cell-item>
 			</u-cell-group>
@@ -33,7 +36,7 @@
 
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<u-cell-item icon="error-circle" @click="logout()" title="退出账号"></u-cell-item>
+				<u-cell-item icon="error-circle" @click="logoutShow = true	" title="退出账号"></u-cell-item>
 			</u-cell-group>
 		</view>
 		<u-tabbar @change="beforeSwitch()" :list="tabbar" :mid-button="true"></u-tabbar>
@@ -55,6 +58,11 @@
 		mapState: tabbarState,
 		mapMutations: tabbarMutations
 	} = createNamespacedHelpers('tabbar')
+	const {
+		mapState: listState,
+		mapMutations: listMutations,
+		mapGetters: listGetters
+	} = createNamespacedHelpers('list')
 	export default {
 		data() {
 			return {
@@ -62,21 +70,23 @@
 				pic: 'https://gitee.com/lang-tian/image_upload/raw/master/img/image-20210815201154048.png',
 				show: false,
 				// 模态框
-				moShow: false,
+				modalShow: false,
+				// 退出模态框
+				logoutShow: false,
 				// 昵称
 				nickname: ''
 			}
 		},
 		onLoad() {
-			const _self = this;
-			// 获取数据
-			(async function() {
-				let userInfo = await uni.getStorageSync('user_info')
+			// vuex 用户信息为空 从缓存中获取信息
+			if (JSON.stringify(this.user) === "{}") {
+				const _self = this;
+				// 获取数据
+				let userInfo = uni.getStorageSync('user_info')
 				if (userInfo) {
 					_self.updateUser(userInfo)
 				}
-			})()
-			// console.log(this.user);
+			}
 
 		},
 		computed: {
@@ -85,16 +95,21 @@
 		},
 
 		methods: {
-			...loginMutations(['updateUser']),
+			...loginMutations(['updateUser','updateUser2']),
+			...listMutations(['setUserData','clearList']),
 			// 打开模态框
 			openModal() {
 				this.moShow = true
 			},
+			// 上传用户数据
+			uploadUserData() {
+				this.$uploadData(this.$refs.uToast)
+			},
 			// 切换 tabBar 调用
 			beforeSwitch() {
-				let usrInfo = uni.getStorageSync('user_info')
+				/* let usrInfo = uni.getStorageSync('user_info')
 				usrInfo && uni.removeStorageSync('userData')
-				this.todoObj && this.$getUserData(this.todoObj);
+				this.todoObj && this.$getUserData(this.todoObj); */
 			},
 			// 获取用户信息
 			async getUser() {
@@ -115,23 +130,6 @@
 				this.getUser();
 				// 设置昵称 为 ''
 				this.nickname = '';
-			},
-			// 设置头像 这个不兼容 安卓。。。
-			async setAvatar2() {
-				uniCloud.chooseAndUploadFile({
-					count: 1,
-					success: async (data) => {
-						const avatar = data.tempFiles[0].url
-						const res = await this.$req('setAvatar', {
-							avatar
-						})
-						// console.log(res);
-						if (res.code !== 0) return this.$showt('error', res.msg)
-						this.$showt('success', res.msg)
-						// 更新数据到本地
-						this.getUser()
-					}
-				})
 			},
 			// 设置头像
 			async setAvatar() {
@@ -170,35 +168,27 @@
 				})
 			},
 			// 点击信息详情
-			getInfo() {
+			async getInfo() {
 				// 判断是否登录
 				// 判断本地是否存在 token
 				if (!(uni.getStorageSync('uni_id_token') && uni.getStorageSync('uni_id_token_expired'))) {
 					this.$showt('error', '尚未登录')
+					// 执行登出操作
+					await this.logout()
+					// 跳转到登录注册页面
 					return uni.navigateTo({
 						url: '/pages/user-center/login/login'
 					})
 				}
-				// 判断 token 是否合法/过期
-				// 跳转到用户信息
-				/* uni.navigateTo({
-					url: '/pages/user-center/user-info/user-info'
-				}) */
-
+			},
+			// 确认退出
+			confirmLogout(){
+				// 退出
+				this.logout()
 			},
 			// 登出
 			async logout() {
-				let userData = uni.getStorageSync('userData')
-				let userInfo = uni.getStorageSync('user_info');
-				if (userInfo) {
-					let res2 = await this.$req('savaUserData', {
-						username: userInfo.username,
-						userData
-					}, true)
-					if (res2.code === 0) {
-						this.$showt('success', res2.msg)
-					}
-				}
+				
 				const res = await this.$req('logout')
 				// console.log(res);
 				// 登出成功
@@ -209,7 +199,7 @@
 						await uni.removeStorageSync('uni_id_token')
 						await uni.removeStorageSync('uni_id_token_expired')
 					}
-					return vueCom.$showt('error', res.msg)
+					return this.$showt('error', res.msg)
 				}
 				this.$showt('success', res.msg)
 				// 删除 token
@@ -217,7 +207,10 @@
 				uni.removeStorageSync('uni_id_token_expired')
 				uni.removeStorageSync('user_info')
 				uni.removeStorageSync('userData')
-				this.updateUser('')
+				// 清空列表
+				this.updateUser2({})
+				this.setUserData({})
+				this.clearList()
 			}
 
 		}

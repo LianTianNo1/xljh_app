@@ -10,6 +10,10 @@ const mutations = {
 	async updateUser(state, payload) {
 		state.user = payload
 		await uni.setStorageSync('user_info',state.user)
+	},
+	// 不缓存
+	async updateUser2(state, payload) {
+		state.user = payload
 	}
 }
 

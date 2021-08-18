@@ -30,8 +30,9 @@ function req(action, params, flag) {
 }
 
 // 显示 Toast
-function showToast(type, title, url) {
-	this.$refs.uToast.show({
+function showToast(type, title, ele, url) {
+	let ref = ele || this.$refs.uToast
+	ref.show({
 		type,
 		title,
 		url: url ? url : '',
@@ -54,47 +55,34 @@ function formatDate(date) {
 	return y + '-' + m + '-' + d;
 }
 
+let uploadData = async (ele) => {
+	let userData = uni.getStorageSync('userData')
+	let userInfo = uni.getStorageSync('user_info');
+	console.log(userData);
+	if (JSON.stringify(userData) === '{}' || userData === '' || userData === undefined || userData === null) {
+		uni.setStorageSync('userData', {})
+		return showToast('error', '当前没有数据需要进行上传', ele)
+	}
+	// 判断上传的数据是否为 对象类型
+	if(!(Object.prototype.toString.call(userData)==="[object Object]")) return showToast('error', '上传的数据格式出现问题', ele)
+	if (userInfo) {
+		let res2 = await req('savaUserData', {
+			username: userInfo.username,
+			userData
+		}, true)
+		if (res2.code !== 0){
+			if(res2.msg==='修改失败')return showToast('error', '数据无变化，所以就不上传了', ele)
+			return showToast('error', res2.msg, ele)
+		} 
+		showToast('success', res2.msg, ele)
+	} else {
+		showToast('error', '尚未登录不能进行上传', ele)
+	}
+}
+
 // 获取数据
 let getUserData = async (vueCom) => {
-	// 获取缓存中的数据
-	let userData = await uni.getStorageSync('userData')
-	// 缓存中的数据不为空
-	if (userData) {
-		// 更新到 vuex
-		vueCom.setUserData(userData);
-		let index = Object.keys(userData).findIndex(item => {
-			return item === vueCom.chooseTime
-		})
-		// 设置对应日期的 todolist
-		if (index !== -1) {
-			vueCom.updateTodoList(userData[vueCom.chooseTime])
-		}
-	} else {
-		// 本地没有缓存从云端获取
-		const res = await vueCom.$req('getUser')
-		if (res.code !== 0) {
-			let userInfo = await uni.getStorageSync('user_info')
-			if (userInfo) {
-				await uni.removeStorageSync('user_info')
-				await uni.removeStorageSync('uni_id_token')
-				await uni.removeStorageSync('uni_id_token_expired')
-			}
-			return vueCom.$showt('error', res.msg)
-		}
-		let userData = res.userInfo.userData
-		if(userData===''||typeof userData!== 'object'){
-			userData = {}
-		}
-		// 更新到 vuex
-		vueCom.setUserData(userData);
-		let index = Object.keys(userData).findIndex(item => {
-			return item === vueCom.chooseTime
-		})
-		// 设置对应日期的 todolist
-		if (index !== -1) {
-			vueCom.updateTodoList(userData[vueCom.chooseTime])
-		}
-	}
+	return `该方法废弃`
 }
 
 export {
@@ -102,5 +90,6 @@ export {
 	showToast,
 	rd,
 	formatDate,
-	getUserData
+	getUserData,
+	uploadData
 }

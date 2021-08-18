@@ -114,19 +114,36 @@
 		computed: {
 			...tabbarState(['tabbar', 'todoObj']),
 			...loginInfoState(['user']),
-			...listState(['todoList', 'userDate', 'chooseTime']),
+			...listState(['todoList', 'userData', 'chooseTime']),
 			...listGetters(['completed', 'nocompleted', 'totalcompleted'])
 		},
 		onLoad() {
 			// 获取数据
-			this.setTodoObj(this);
+			// vuex 用户信息为空 从缓存中获取信息
+			if (JSON.stringify(this.userData) === "{}") {
+				const _self = this;
+				// 获取数据
+				let userData = uni.getStorageSync('userData')
+				if (userData) {
+					// 从缓存中获取到 vuex
+					_self.setUserData(userData)
+					// 找出当天的 todolist 赋值
+					let index = Object.keys(userData).findIndex(item => {
+						return item === this.chooseTime
+					})
+					// 设置对应日期的 todolist
+					if (index !== -1) {
+						this.updateTodoList2(userData[this.chooseTime])
+					}
+				}
+			}
 		},
 		mounted() {
-			this.$getUserData(this.todoObj);
+			
 		},
 		async onPullDownRefresh() {
 			// 刷新更新数据
-			let userData = uni.getStorageSync('userData')
+			/* let userData = uni.getStorageSync('userData')
 			let userInfo = uni.getStorageSync('user_info')
 			if (userInfo) {
 				// console.log(userInfo);
@@ -144,30 +161,24 @@
 			} else {
 				this.$showt('error', "尚未登录不能同步喔")
 				uni.stopPullDownRefresh();
-			}
+			} */
 
 			// this.$getUserData(this)
 		},
 		methods: {
 			...tabbarMutations(['setTodoObj']),
 			...listMutations(['setUserData', 'updateTime', 'updateTodoList', 'updateIsCompleted', 'deleteItem',
-				'addItem'
+				'addItem','updateTodoList2'
 			]),
 			// 切换 tabBar 调用
 			beforeSwitch() {
-				let usrInfo = uni.getStorageSync('user_info')
+				/* let usrInfo = uni.getStorageSync('user_info')
 				usrInfo && uni.removeStorageSync('userData')
-				this.todoObj && this.$getUserData(this.todoObj);
+				this.todoObj && this.$getUserData(this.todoObj); */
 			},
-
-			// test
-			test() {
-				console.log(111111);
-			},
-			// 改变日期
+			// 监听改变日期
 			changeDate(e) {
 				this.updateTime(e.result)
-				// console.log(e);
 			},
 			// 开启日历
 			openCalendar() {

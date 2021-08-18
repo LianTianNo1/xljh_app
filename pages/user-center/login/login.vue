@@ -42,9 +42,15 @@
 		mapState,
 		mapMutations,
 	} = createNamespacedHelpers('loginInfo')
+	const {
+		mapState: listState,
+		mapMutations: listMutations,
+		mapGetters: listGetters
+	} = createNamespacedHelpers('list')
 	export default {
 		computed: {
-			...mapState(['user'])
+			...mapState(['user']),
+			...listState(['todoList', 'userDate', 'chooseTime']),
 		},
 		data() {
 			return {
@@ -99,6 +105,7 @@
 			this.createCaptcha()
 		},
 		methods: {
+			...listMutations(['setUserData', 'updateTodoList2','setChooseTime']),
 			...mapMutations(['updateUser']),
 
 			// 刷新验证码
@@ -124,11 +131,32 @@
 				// console.log(res);
 			},
 			// 获取用户信息
-			async getUser() {
+			async getUser(VueComponent) {
 				const res = await this.$req('getUser')
-				if (res.code !== 0) return this.$showt('error', res.msg)
+				console.log('用户信息', res);
+				if (res.code !== 0) return console.log('获取用户数据失败');
+				console.log('获取用户数据成功');
+				// 保存用户信息
 				this.updateUser(res.userInfo)
-				// console.log(res);
+				await uni.setStorageSync('user_info', res.userInfo)
+				// 获取列表数据
+				let userData = res.userInfo.userData
+				// console.log('我是 userData',userData);
+				if (userData === '' || userData === undefined || userData === null) {
+					console.log('居然为空。。。不是吧');
+					userData = {}
+				}
+				// 更新到 vuex
+				this.setUserData(userData);
+				uni.setStorageSync('userData', userData)
+				this.setChooseTime(this.$formatDate(new Date()))
+				let index = Object.keys(userData).findIndex(item => {
+					return item === this.chooseTime
+				})
+				// 设置对应日期的 todolist
+				if (index !== -1) {
+					this.updateTodoList2(userData[this.chooseTime])
+				}
 			},
 			// 登录
 			async login() {
@@ -154,8 +182,10 @@
 				// 返回个人中心
 				uni.navigateBack({
 					success: (res) => {
-						this.getUser()
+						// 删除之前的记录
 						uni.removeStorageSync('userData')
+						this.getUser(this)
+
 					}
 				})
 
@@ -228,14 +258,14 @@
 				border-radius: 40rpx;
 				position: absolute;
 				left: 50%;
-				transform: translate(-50%,0);
+				transform: translate(-50%, 0);
 				bottom: 2%;
 				height: 22vh;
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: space-between;
 				align-items: center;
-				
+
 				background: #FFFFFF;
 				box-shadow: 0px 1px 10px 4px #EAEAEA, -0px -1px 10px 4px #EAEAEA;
 

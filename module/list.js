@@ -36,6 +36,10 @@ const state = {
 	lastTime: null
 }
 const mutations = {
+	// 单纯设置 chooseTime
+	setChooseTime(state,payload){
+		state.chooseTime = payload
+	},
 	// 更新Todo数据
 	updateTime(state, payload) {
 		state.lastTime = state.chooseTime
@@ -64,30 +68,15 @@ const mutations = {
 	setUserData(state, payload) {
 		state.userData = payload
 	},
-	// 用户数据
+	// 更新用户数据
 	async updateUserDate(state, payload) {
 		// debugger;
-		// 判断是否是当前的Todo
+		// 不传入时间 默认使用当前时间
 		let newTime = payload || state.chooseTime
-		console.log(state.userData);
-		// console.log('当前选择的时间', newTime);
-		if ((state.userData.size === 0 || state.userData === '') &&
-			newTime === formatDate(new Date())) {
-			// 存在直接修改替换哪一个信息 今天日期 用户信息
-			state.userData[newTime] = state.todoList
-			uni.setStorageSync('userData', state.userData)
-			console.log('第一次添加');
-			// console.log(state.userData, uni.getStorageSync('userData'));
-		}
+		// console.log('目前1-- uesrData:', state.userData, '目前todoList:', state.todoList);
+		state.userData[newTime] = state.todoList
+		// uni.setStorageSync('userData', state.userData)
 
-		// 是否有缓存
-		let user = await uni.getStorageSync('userData')
-
-		if (user.size > 0) {
-			// 把缓存中 userData 给到 vuex userData
-			state.userData = user
-		}
-		// 缓存不存在直接使用 本地 userDate
 		// index 用来判断是否存在这个日期的 信息
 		let index = Object.keys(state.userData).findIndex(item => {
 			return item === newTime
@@ -95,48 +84,28 @@ const mutations = {
 		// 创建一个当前的时间 todo
 		let todo
 		// 存在当前日期的todoList
-		if (index !== -1) {
 			// console.log('存在当前日期');
+		if (index !== -1) {
 			todo = state.todoList
 		} else {
 			// console.log('不存在当前日期', state.userData);
-
 			todo = []
 		}
 		// 创建今天日期 用户信息
 		// 存在直接修改替换哪一个信息
-		// console.log(state.userData);
 		state.userData[newTime] = todo
 		state.todoList = todo
-		// 保存数据
+		// 保存数据到本地
 		uni.setStorageSync('userData', state.userData)
-		// 如果登录了保存到云端
-		let userInfo = uni.getStorageSync('user_info');
-		/* if(userInfo){
-			console.log('要上传云端了');
-			const res = await req('savaUserData', {
-				userData: state.userData
-			},true)
-			console.log(1111111111111111);
-			console.log('上传结果',res);
-		} */
-
-
-		/* 	if (userInfo) {
-				let res2 = await req('savaUserData', {
-					username: userInfo.username,
-					userData:state.userData
-				}, true)
-				if (res2.code !== 0) {
-					console.log('上传失败');
-				}
-				console.log('上传成功');
-			} */
 	},
 	// 更新Todo数据
 	updateTodoList(state, payload) {
 		state.todoList = payload
 		this.commit('list/updateUserDate')
+	},
+	// 更新Todo数据不更新 data
+	updateTodoList2(state, payload) {
+		state.todoList = payload
 	},
 	// 修改 isCompleted
 	updateIsCompleted(state, payload) {
@@ -153,6 +122,10 @@ const mutations = {
 	addItem(state, payload) {
 		state.todoList.push(payload)
 		this.commit('list/updateUserDate')
+	},
+	// 清空 list 
+	clearList(state, payload) {
+		state.todoList = []
 	}
 }
 
