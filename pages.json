@@ -6,7 +6,8 @@
 		{
 			"path": "pages/todo/todo",
 			"style": {
-				"navigationBarTitleText": "todo"
+				"navigationBarTitleText": "todo",
+				"enablePullDownRefresh": true
 			}
 		}     
         ,{

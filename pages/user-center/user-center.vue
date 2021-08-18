@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-navbar :is-back='false'  title="个人中心"></u-navbar>
+		<u-navbar :is-back='false' title="个人中心"></u-navbar>
 		<u-toast ref="uToast" />
 		<view @click="getInfo" class="headPart u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
 			<view class="u-m-r-10">
@@ -14,7 +14,8 @@
 		<view>
 			<u-modal :show-cancel-button="true" @confirm="updateNickName" title="修改昵称" v-model="moShow">
 				<view class="slot-content">
-					<input :style="{'boxShadow': '0px 1px 1px 0px #CFD8DC','height': '90rpx','lineHeight':'1'}"
+					<input
+						:style="{'boxShadow': '0px 1px 1px 0px #CFD8DC','borderRadius':'50rpx','textAlign':'center','height': '90rpx','lineHeight':'1'}"
 						class="update-nick" type="text" v-model="nickname" />
 				</view>
 			</u-modal>
@@ -75,13 +76,12 @@
 					_self.updateUser(userInfo)
 				}
 			})()
-
 			// console.log(this.user);
 
 		},
 		computed: {
 			...loginState(['user']),
-			...tabbarState(['tabbar','todoObj']),
+			...tabbarState(['tabbar', 'todoObj']),
 		},
 
 		methods: {
@@ -92,6 +92,8 @@
 			},
 			// 切换 tabBar 调用
 			beforeSwitch() {
+				let usrInfo = uni.getStorageSync('user_info')
+				usrInfo && uni.removeStorageSync('userData')
 				this.todoObj && this.$getUserData(this.todoObj);
 			},
 			// 获取用户信息
@@ -141,7 +143,7 @@
 							let filePath = res.tempFilePaths[0]
 							//进行上传操作
 							const tempFiles = res.tempFiles[0]
-							const absUrl = tempFiles.path+'/'+tempFiles.name
+							const absUrl = tempFiles.path + '/' + tempFiles.name
 							console.log(absUrl);
 							uniCloud.uploadFile({
 								filePath: filePath,
@@ -149,7 +151,7 @@
 								success: async (res2) => {
 									console.log(res2);
 									const res3 = await this.$req('setAvatar', {
-										avatar : res2.fileID
+										avatar: res2.fileID
 									})
 									if (res3.code !== 0) return this.$showt('error', res3.msg)
 									this.$showt('success', res3.msg)
@@ -157,23 +159,15 @@
 									this.getUser()
 									console.log(res3);
 								},
-								fail:(err)=> {
+								fail: (err) => {
 									console.log(err);
 									return this.$showt('error', "上传图片出错")
 								}
 							})
-							
+
 						}
 					}
 				})
-
-				/* 
-						if (res.code !== 0) return this.$showt('error', res.msg)
-						this.$showt('success', res.msg)
-						// 更新数据到本地
-						this.getUser()
-					}
-				}) */
 			},
 			// 点击信息详情
 			getInfo() {
@@ -194,10 +188,29 @@
 			},
 			// 登出
 			async logout() {
+				let userData = uni.getStorageSync('userData')
+				let userInfo = uni.getStorageSync('user_info');
+				if (userInfo) {
+					let res2 = await this.$req('savaUserData', {
+						username: userInfo.username,
+						userData
+					}, true)
+					if (res2.code === 0) {
+						this.$showt('success', res2.msg)
+					}
+				}
 				const res = await this.$req('logout')
 				// console.log(res);
 				// 登出成功
-				if (res.code !== 0) return this.$showt('error', res.msg)
+				if (res.code !== 0) {
+					let userInfo = await uni.getStorageSync('user_info')
+					if (userInfo) {
+						await uni.removeStorageSync('user_info')
+						await uni.removeStorageSync('uni_id_token')
+						await uni.removeStorageSync('uni_id_token_expired')
+					}
+					return vueCom.$showt('error', res.msg)
+				}
 				this.$showt('success', res.msg)
 				// 删除 token
 				uni.removeStorageSync('uni_id_token')

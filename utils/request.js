@@ -1,4 +1,3 @@
-
 // 封装请求
 function req(action, params, flag) {
 	if (!flag) {
@@ -56,7 +55,7 @@ function formatDate(date) {
 }
 
 // 获取数据
-let  getUserData = async  (vueCom)=> {
+let getUserData = async (vueCom) => {
 	// 获取缓存中的数据
 	let userData = await uni.getStorageSync('userData')
 	// 缓存中的数据不为空
@@ -73,8 +72,19 @@ let  getUserData = async  (vueCom)=> {
 	} else {
 		// 本地没有缓存从云端获取
 		const res = await vueCom.$req('getUser')
-		if (res.code !== 0) return vueCom.$showt('error', res.msg)
+		if (res.code !== 0) {
+			let userInfo = await uni.getStorageSync('user_info')
+			if (userInfo) {
+				await uni.removeStorageSync('user_info')
+				await uni.removeStorageSync('uni_id_token')
+				await uni.removeStorageSync('uni_id_token_expired')
+			}
+			return vueCom.$showt('error', res.msg)
+		}
 		let userData = res.userInfo.userData
+		if(userData===''||typeof userData!== 'object'){
+			userData = {}
+		}
 		// 更新到 vuex
 		vueCom.setUserData(userData);
 		let index = Object.keys(userData).findIndex(item => {

@@ -224,7 +224,7 @@
 
 			.footer-btn {
 				padding: 40rpx;
-				width: 80%;
+				width: 95%;
 				border-radius: 40rpx;
 				position: absolute;
 				left: 50%;
@@ -246,7 +246,6 @@
 					justify-content: center;
 					align-items: center;
 					border-radius: 8px;
-					letter-spacing: 30rpx;
 
 					box-shadow: 0px 2px 5px 1px #CFD8DC;
 				}

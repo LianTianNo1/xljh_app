@@ -46,11 +46,26 @@ exports.main = async (event, context) => {
 			break;
 		}
 		// 保存数据
-		case 'savaUserData': {
+		case 'savaUserData2': {
+			uniCloud.logger.log(payload.uid,user.id,params.userData)
 			res = await uniID.updateUser({
-			    uid: user.uid,
+			    uid: payload.uid,
 			    userData: params.userData
 			  })
+			break;
+		}
+		// 保存数据
+		case 'savaUserData': {
+			const { username,userData } = params
+			res = await collection.where({username}).update({userData})
+			if(res.affectedDocs===0){			
+				res.code = 9999
+				res.msg = '修改失败'
+			}else {
+				res.code = 0
+				res.msg = '上传成功'
+			}
+			// uniCloud.logger.log(res)
 			break;
 		}
 		// 获取 TodoList 数据
@@ -107,6 +122,7 @@ exports.main = async (event, context) => {
 		}
 		// 登出
 		case 'logout': {
+			uniCloud.logger.log("登出",event.uniIdToken)
 			res = await uniID.logout(event.uniIdToken);
 			break;
 		}

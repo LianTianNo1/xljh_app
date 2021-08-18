@@ -120,7 +120,33 @@
 		onLoad() {
 			// 获取数据
 			this.setTodoObj(this);
+		},
+		mounted() {
 			this.$getUserData(this.todoObj);
+		},
+		async onPullDownRefresh() {
+			// 刷新更新数据
+			let userData = uni.getStorageSync('userData')
+			let userInfo = uni.getStorageSync('user_info')
+			if (userInfo) {
+				// console.log(userInfo);
+				let res2 = await this.$req('savaUserData', {
+					username: userInfo.username,
+					userData
+				}, true)
+				console.log('res2', res2);
+				if (res2.code !== 0) {
+					uni.stopPullDownRefresh();
+					return this.$showt('error', res2.msg)
+				}
+				this.$showt('success', '上传成功！！')
+				uni.stopPullDownRefresh();
+			} else {
+				this.$showt('error', "尚未登录不能同步喔")
+				uni.stopPullDownRefresh();
+			}
+
+			// this.$getUserData(this)
 		},
 		methods: {
 			...tabbarMutations(['setTodoObj']),
@@ -129,6 +155,8 @@
 			]),
 			// 切换 tabBar 调用
 			beforeSwitch() {
+				let usrInfo = uni.getStorageSync('user_info')
+				usrInfo && uni.removeStorageSync('userData')
 				this.todoObj && this.$getUserData(this.todoObj);
 			},
 

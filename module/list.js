@@ -69,13 +69,14 @@ const mutations = {
 		// debugger;
 		// 判断是否是当前的Todo
 		let newTime = payload || state.chooseTime
+		console.log(state.userData);
 		// console.log('当前选择的时间', newTime);
-		if ((state.todoList.length > 0 || state.todoList.length == 0) && state.userData.size === 0 &&
+		if ((state.userData.size === 0 || state.userData === '') &&
 			newTime === formatDate(new Date())) {
 			// 存在直接修改替换哪一个信息 今天日期 用户信息
 			state.userData[newTime] = state.todoList
 			uni.setStorageSync('userData', state.userData)
-			// console.log('第一次添加');
+			console.log('第一次添加');
 			// console.log(state.userData, uni.getStorageSync('userData'));
 		}
 
@@ -104,17 +105,33 @@ const mutations = {
 		}
 		// 创建今天日期 用户信息
 		// 存在直接修改替换哪一个信息
+		// console.log(state.userData);
 		state.userData[newTime] = todo
 		state.todoList = todo
 		// 保存数据
 		uni.setStorageSync('userData', state.userData)
 		// 如果登录了保存到云端
 		let userInfo = uni.getStorageSync('user_info');
-		if(userInfo){
+		/* if(userInfo){
+			console.log('要上传云端了');
 			const res = await req('savaUserData', {
 				userData: state.userData
 			},true)
-		}	
+			console.log(1111111111111111);
+			console.log('上传结果',res);
+		} */
+
+
+		/* 	if (userInfo) {
+				let res2 = await req('savaUserData', {
+					username: userInfo.username,
+					userData:state.userData
+				}, true)
+				if (res2.code !== 0) {
+					console.log('上传失败');
+				}
+				console.log('上传成功');
+			} */
 	},
 	// 更新Todo数据
 	updateTodoList(state, payload) {
