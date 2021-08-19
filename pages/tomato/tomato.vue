@@ -48,7 +48,11 @@
 		height: 100vh;
 		width: 100vw;
 		background-color: #ededed;
-		.content{
+		/* background-image: url(../../static/material/tomato.png);
+		background-repeat: no-repeat;
+		background-size: 50vw 55vw;
+		background-position: center; */
+		/* .content{
 			width: 100%;
 			height: 50vh;
 			display: flex;
@@ -62,7 +66,7 @@
 				.time-down{
 				}
 			}
-		}
+		} */
 		
 	}
 </style>
