@@ -41,8 +41,8 @@
 		createNamespacedHelpers
 	} from 'vuex'
 	const {
-		mapState:loginState,
-		mapMutations:loginMutations,
+		mapState: loginState,
+		mapMutations: loginMutations,
 	} = createNamespacedHelpers('loginInfo')
 	const {
 		mapState: listState,
@@ -108,7 +108,7 @@
 		},
 		methods: {
 			...listMutations(['setUserData', 'updateTodoList2', 'setChooseTime']),
-			...mapMutations(['setTomatoData', 'setTomatoInfo']),
+			...mapMutations(['setTomatoData', 'setTomatoInfo', 'setChar','setChartData']),
 			...loginMutations(['updateUser']),
 
 			// 刷新验证码
@@ -150,14 +150,28 @@
 					console.log('居然为空。。。不是吧');
 					tomatoData = {}
 				}
+
+
 				if (userData === '' || userData === undefined || userData === null) {
 					console.log('居然为空。。。不是吧');
 					userData = {}
 				}
+
+
 				// 更新到 vuex
 				this.setUserData(userData);
 				this.setTomatoData(tomatoData)
-				this.setTomatoInfo(tomatoData[this.$formatDate(new Date())])
+				// 获取数据
+				let tempInfo = tomatoData[this.$formatDate(new Date())]
+				if (!tempInfo || tempInfo === undefined || tempInfo === null || tempInfo === '') {
+					this.setTomatoInfo([])
+				} else {
+					this.setTomatoInfo(tempInfo)
+					
+				}
+				// 更新图表
+				this.setChar()
+				// this.setTomatoInfo(tomatoData[this.$formatDate(new Date())])
 				uni.setStorageSync('userData', userData)
 				uni.setStorageSync('tomatoData', tomatoData)
 				this.setChooseTime(this.$formatDate(new Date()))

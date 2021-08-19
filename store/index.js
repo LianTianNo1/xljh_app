@@ -19,10 +19,33 @@ export default new Vuex.Store({
 		// 用来储存 番茄记录
 		tomatoData: {},
 		// 每一个番茄
-		tomatoInfo: [],		
+		tomatoInfo: [],	
+		// 图表数据
+		chartData: {
+			categories: [],
+			series: [{data:[]}]
+		},
+
+
 	},
 	// 用来处理状态
 	mutations: {
+		// 设置图表
+		setChar(state){
+			let tempArry = []
+			state.tomatoInfo.forEach(item => {
+				tempArry.push({
+					name: item.taskName,
+					value: item.taskTime
+				})
+			})
+			console.log('触发了',state.chartData);
+			state.chartData.series[0].data = tempArry
+		},
+		// 设置图表数据
+		 setChartData(state, payload) {
+			state.chartData.series[0].data = payload
+		},
 		// 更新番茄记录
 		 updateTomatoData(state, payload) {
 			state.tomatoData[payload[0]] = payload[1]

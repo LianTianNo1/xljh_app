@@ -41,6 +41,11 @@
 				总计 {{ nowInfo.total }} 分钟
 			</view>
 		</view>
+		<!-- 图表 -->
+		<view v-if="nowInfo.len<=10" class="charts-box">
+			<qiun-data-charts type="rose" :chartData="chartData" :echartsApp="true" background="none" />
+		</view>
+
 		<view>
 			<u-modal :show-cancel-button="true" @confirm="setTask" title="设置任务" v-model="taskShow">
 				<view class="slot-content">
@@ -54,17 +59,22 @@
 			<u-modal :content="detailed" @confirm="detailedShow = false" title="什么是番茄时间" v-model="detailedShow">
 			</u-modal>
 		</view>
+
 	</view>
 
 </template>
 
 <script>
+	import qiunDataCharts from '@/uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue'
 	import {
 		mapState,
 		mapMutations
 	} from 'vuex'
 
 	export default {
+		components: {
+			'qiun-data-charts': qiunDataCharts
+		},
 		props: {
 			startTime: {
 				type: String,
@@ -74,7 +84,7 @@
 			},
 		},
 		computed: {
-			...mapState(['tomatoData', 'tomatoInfo']),
+			...mapState(['tomatoData', 'tomatoInfo', 'chartData']),
 			// ...tomatoState(['tomatoData', 'tomatoInfo']),
 			sTime() {
 				return this.startTime
@@ -98,10 +108,10 @@
 				let tempArr = []
 				obj.totoTime = totoTime / 60
 				tempArr = [...Object.keys(this.tomatoData)]
-				
-				if(tempArr.length){
+
+				if (tempArr.length) {
 					obj.len = tempArr.length
-				}else{
+				} else {
 					obj.len = 0
 				}
 				return obj
@@ -115,10 +125,10 @@
 				// 获取今天的番茄信息
 				let nowInfo = this.tomatoData[this.nowTime]
 				// console.log(nowInfo);
-				if(nowInfo === ""||nowInfo===undefined||nowInfo===null){
+				if (nowInfo === "" || nowInfo === undefined || nowInfo === null) {
 					nowInfo = []
 				}
-				
+
 				let obj = {
 					len: nowInfo.length,
 					total: 0
@@ -207,21 +217,20 @@
 				// 获取数据
 				let tempData = uni.getStorageSync('tomatoData')
 				if (JSON.stringify(tempData) === '{}' || tempData === '') {
-					// this.tomatoData = {}
 					this.setTomatoData({})
 				} else {
 					this.setTomatoData(tempData)
-					// this.tomatoData = tempData
 					let tempInfo = tempData[this.nowTime]
 					if (!tempInfo || tempInfo === undefined || tempInfo === null || tempInfo === '') {
-						// this.tomatoInfo = []
 						this.setTomatoInfo([])
 					} else {
-						// this.tomatoInfo = tempInfo
 						this.setTomatoInfo(tempInfo)
+						// 更新图表
+						this.setChar()
+						/* console.log(tempArry);
+						console.log(this.chartData); */
 					}
-					/* console.log(`tomatoData`, this.tomatoData);
-					console.log(`tomatoInfo`, this.tomatoInfo); */
+
 				}
 			}
 			this.crateTime()
@@ -243,7 +252,9 @@
 			}
 		},
 		methods: {
-			...mapMutations(['updateTomatoData', 'updateTomatoInfo', 'setTomatoData', 'setTomatoInfo']),
+			...mapMutations(['setChar', 'setChartData', 'updateTomatoData', 'updateTomatoInfo', 'setTomatoData',
+				'setTomatoInfo'
+			]),
 			// ...tomatoMutations(['updateTomatoData', 'updateTomatoInfo', 'setTomatoData', 'setTomatoInfo']),
 			// 设置任务
 			setTask() {
@@ -345,6 +356,8 @@
 							// 添加记录
 							// this.tomatoData[this.nowTime] = this.tomatoInfo
 							this.updateTomatoData([this.nowTime, this.tomatoInfo])
+							// 更新图表
+							this.setChar()
 							// 保存到缓存
 							uni.setStorageSync('tomatoData', this.tomatoData)
 							// 震动手机
@@ -373,6 +386,10 @@
 		display: flex;
 		justify-content: center;
 
+		.charts-box {
+			width: 100%;
+			height: 300px;
+		}
 
 		.tomato-wrap {
 			width: 95vw;
