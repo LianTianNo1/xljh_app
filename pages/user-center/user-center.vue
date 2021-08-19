@@ -48,6 +48,7 @@
 <script>
 	import {
 		mapState,
+		mapMutations,
 		createNamespacedHelpers
 	} from 'vuex'
 	const {
@@ -67,7 +68,7 @@
 		data() {
 			return {
 				// 头像
-				pic: 'https://gitee.com/lang-tian/image_upload/raw/master/img/image-20210815201154048.png',
+				pic: 'https://gitee.com/lang-tian/image_upload/raw/master/img/image-20210819134152332.png',
 				show: false,
 				// 模态框
 				modalShow: false,
@@ -95,6 +96,7 @@
 		},
 
 		methods: {
+			...mapMutations(['updateTomatoData', 'updateTomatoInfo', 'setTomatoData', 'setTomatoInfo']),
 			...loginMutations(['updateUser','updateUser2']),
 			...listMutations(['setUserData','clearList']),
 			// 打开模态框
@@ -107,9 +109,6 @@
 			},
 			// 切换 tabBar 调用
 			beforeSwitch() {
-				/* let usrInfo = uni.getStorageSync('user_info')
-				usrInfo && uni.removeStorageSync('userData')
-				this.todoObj && this.$getUserData(this.todoObj); */
 			},
 			// 获取用户信息
 			async getUser() {
@@ -207,10 +206,13 @@
 				uni.removeStorageSync('uni_id_token_expired')
 				uni.removeStorageSync('user_info')
 				uni.removeStorageSync('userData')
+				uni.removeStorageSync('tomatoData')
 				// 清空列表
 				this.updateUser2({})
 				this.setUserData({})
 				this.clearList()
+				this.setTomatoData({})
+				this.setTomatoInfo([])
 			}
 
 		}

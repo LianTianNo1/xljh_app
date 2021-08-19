@@ -240,12 +240,12 @@
 				width: 90vw;
 				height: 50vh;
 				margin: 10rpx 10rpx 0;
-				font-weight: bold;
-				color: #d4edf4;
+				// font-weight: bold;
+				color: #26C6DA;
 				font-size: 40rpx;
 				line-height: 1.5;
 				letter-spacing: 10rpx;
-				text-shadow: 2rpx 2rpx 0rpx #B0BEC5, -2rpx -2rpx 2rpx #FAFAFA;
+				// text-shadow: 2rpx 2rpx 0rpx #B0BEC5, -2rpx -2rpx 2rpx #FAFAFA;
 				background-color: rgb(250, 250, 250);
 				display: flex;
 				justify-content: center;

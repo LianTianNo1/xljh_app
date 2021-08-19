@@ -47,11 +47,24 @@ exports.main = async (event, context) => {
 		}
 		// 保存数据
 		case 'savaUserData2': {
-			uniCloud.logger.log(payload.uid,user.id,params.userData)
+			// uniCloud.logger.log(payload.uid,user.id,params.userData)
 			res = await uniID.updateUser({
 			    uid: payload.uid,
 			    userData: params.userData
 			  })
+			break;
+		}
+		// 保存番茄数据
+		case 'savatomatoData': {
+			const { username,tomatoData } = params
+			res = await collection.where({username}).update({tomatoData})
+			if(res.affectedDocs===0){			
+				res.code = 9999
+				res.msg = '修改失败'
+			}else {
+				res.code = 0
+				res.msg = '上传成功'
+			}
 			break;
 		}
 		// 保存数据

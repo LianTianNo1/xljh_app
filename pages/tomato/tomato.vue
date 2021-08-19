@@ -2,7 +2,7 @@
 	<view class="content">
 		<u-navbar :is-back='false' title="番茄时间"></u-navbar>
 		<view class="clock">
-			<countdown class="time-down" :startTime="startTime" :endTime="enTime" />
+			<tomatotime class="time-down" :startTime="startTime" :endTime="enTime" />
 
 		</view>
 		<u-tabbar @change="beforeSwitch" :list="tabbar" :mid-button="true"></u-tabbar>
@@ -17,7 +17,7 @@
 		mapState: tabbarState,
 		mapMutations: tabbarMutations
 	} = createNamespacedHelpers('tabbar')
-	import countdown from "@/components/cz-countdown/cz-countdown.vue"
+	import tomatotime from "@/components/tomato-time/tomato-time"
 	export default {
 		data() {
 			return {
@@ -38,7 +38,7 @@
 			},
 		},
 		components: {
-			countdown
+			tomatotime
 		}
 	}
 </script>
@@ -48,25 +48,9 @@
 		height: 100vh;
 		width: 100vw;
 		background-color: #ededed;
-		/* background-image: url(../../static/material/tomato.png);
-		background-repeat: no-repeat;
-		background-size: 50vw 55vw;
-		background-position: center; */
-		/* .content{
-			width: 100%;
-			height: 50vh;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			.clock{
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				width: 80vw;
-				.time-down{
-				}
-			}
-		} */
+		display: flex;
+		justify-content: center;
+		// align-items: center;
 		
 	}
 </style>

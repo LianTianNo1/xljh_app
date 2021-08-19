@@ -15,10 +15,31 @@ export default new Vuex.Store({
 	// 状态
 	state: {
 		nickname: '尚未设置昵称',
-		username: '请登录',		
+		username: '请登录',
+		// 用来储存 番茄记录
+		tomatoData: {},
+		// 每一个番茄
+		tomatoInfo: [],		
 	},
 	// 用来处理状态
-	mutations: {},
+	mutations: {
+		// 更新番茄记录
+		 updateTomatoData(state, payload) {
+			state.tomatoData[payload[0]] = payload[1]
+		},
+		// 更新番茄
+		 updateTomatoInfo(state, payload) {
+			state.tomatoInfo.push(payload)
+		},
+		// 设置番茄记录
+		setTomatoData(state, payload) {
+			state.tomatoData = payload
+		},
+		// 设置番茄
+		 setTomatoInfo(state, payload) {
+			state.tomatoInfo = payload
+		},
+	},
 	// 用于异步处理
 	actions: {},
 	// 用来挂载模块

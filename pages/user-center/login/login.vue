@@ -36,11 +36,13 @@
 
 <script>
 	import {
+		mapState,
+		mapMutations,
 		createNamespacedHelpers
 	} from 'vuex'
 	const {
-		mapState,
-		mapMutations,
+		mapState:loginState,
+		mapMutations:loginMutations,
 	} = createNamespacedHelpers('loginInfo')
 	const {
 		mapState: listState,
@@ -49,7 +51,7 @@
 	} = createNamespacedHelpers('list')
 	export default {
 		computed: {
-			...mapState(['user']),
+			...loginState(['user']),
 			...listState(['todoList', 'userDate', 'chooseTime']),
 		},
 		data() {
@@ -105,8 +107,9 @@
 			this.createCaptcha()
 		},
 		methods: {
-			...listMutations(['setUserData', 'updateTodoList2','setChooseTime']),
-			...mapMutations(['updateUser']),
+			...listMutations(['setUserData', 'updateTodoList2', 'setChooseTime']),
+			...mapMutations(['setTomatoData', 'setTomatoInfo']),
+			...loginMutations(['updateUser']),
 
 			// 刷新验证码
 			async refresh(scene) {
@@ -141,14 +144,22 @@
 				await uni.setStorageSync('user_info', res.userInfo)
 				// 获取列表数据
 				let userData = res.userInfo.userData
+				let tomatoData = res.userInfo.tomatoData
 				// console.log('我是 userData',userData);
+				if (tomatoData === '' || tomatoData === undefined || tomatoData === null) {
+					console.log('居然为空。。。不是吧');
+					tomatoData = {}
+				}
 				if (userData === '' || userData === undefined || userData === null) {
 					console.log('居然为空。。。不是吧');
 					userData = {}
 				}
 				// 更新到 vuex
 				this.setUserData(userData);
+				this.setTomatoData(tomatoData)
+				this.setTomatoInfo(tomatoData[this.$formatDate(new Date())])
 				uni.setStorageSync('userData', userData)
+				uni.setStorageSync('tomatoData', tomatoData)
 				this.setChooseTime(this.$formatDate(new Date()))
 				let index = Object.keys(userData).findIndex(item => {
 					return item === this.chooseTime
