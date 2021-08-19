@@ -4,10 +4,10 @@
 		<u-toast ref="uToast" />
 		<view @click="getInfo" class="headPart u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
 			<view class="u-m-r-10">
-				<u-avatar @click="setAvatar" :src="user.avatar?user.avatar:pic" size="140"></u-avatar>
+				<u-avatar  :src="user.avatar?user.avatar:pic" size="140"></u-avatar>
 			</view>
 			<view class="u-flex-1">
-				<view @click="openModal" class="u-font-18 u-p-b-20">{{user.nickname?user.nickname:'暂未设置昵称'}}</view>
+				<view class="u-font-18 u-p-b-20">{{user.nickname?user.nickname:'暂未设置昵称'}}</view>
 				<view class="u-font-14 u-tips-color">账号:{{user.username?user.username:'未登录'}}</view>
 			</view>
 		</view>
@@ -28,9 +28,11 @@
 
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<u-cell-item @click="uploadUserData" icon="info" title="上传数据"></u-cell-item>
-				<u-cell-item icon="photo" title="相册"></u-cell-item>
-				<u-cell-item icon="setting" title="设置"></u-cell-item>
+				<u-cell-item :arrow="false" @click="uploadUserData" icon="hourglass-half-fill" title="上传数据"></u-cell-item>
+				<u-cell-item :arrow="false" @click="openModal"  icon="edit-pen" title="修改昵称"></u-cell-item>
+				<u-cell-item :arrow="false" @click="setAvatar"  icon="edit-pen" title="修改头像"></u-cell-item>
+				<u-cell-item :arrow="false" @click="checkUpdate"  icon="download" title="检查更新"></u-cell-item>
+				<u-cell-item :arrow="false" icon="setting" title="设置"></u-cell-item>
 			</u-cell-group>
 		</view>
 
@@ -46,6 +48,8 @@
 
 
 <script>
+	// const upApp import '@/uni_modules/uni-upgrade-center-app/utils/check-update'
+	import upAPP from '../../uni_modules/uni-upgrade-center-app/utils/check-update.js'
 	import {
 		mapState,
 		mapMutations,
@@ -78,6 +82,10 @@
 				nickname: ''
 			}
 		},
+		mounted() {
+
+			
+		},
 		onLoad() {
 			// vuex 用户信息为空 从缓存中获取信息
 			if (JSON.stringify(this.user) === "{}") {
@@ -101,11 +109,19 @@
 			...listMutations(['setUserData','clearList']),
 			// 打开模态框
 			openModal() {
-				this.moShow = true
+				this.modalShow = true
 			},
 			// 上传用户数据
 			uploadUserData() {
 				this.$uploadData(this.$refs.uToast)
+			},
+			// 检查更新
+			async checkUpdate(){
+				// const res = await upAPP()
+				// console.log(res);
+				const { result } = await upAPP()
+				if(result.code===-101)return this.$showt('error', result.message)
+				this.$showt('success', result.message)
 			},
 			// 切换 tabBar 调用
 			beforeSwitch() {
@@ -120,6 +136,8 @@
 			// 设置昵称
 			async updateNickName() {
 				if (!this.nickname.trim()) return this.$showt('error', '昵称不能为空')
+				let bakcValue = this.getInfo()
+				if(bakcValue !== 'success') return
 				if (this.nickname === this.user.nickname) return this.$showt('error', '昵称似乎毫无改变')
 				const res = await this.$req('setNickName', {
 					nickname: this.nickname
@@ -132,6 +150,8 @@
 			},
 			// 设置头像
 			async setAvatar() {
+				let bakcValue = this.getInfo()
+				if(bakcValue !== 'success') return
 				uni.chooseImage({
 					count: 1,
 					success: (res) => {
@@ -178,7 +198,7 @@
 					return uni.navigateTo({
 						url: '/pages/user-center/login/login'
 					})
-				}
+				}else return 'success'
 			},
 			// 确认退出
 			confirmLogout(){
@@ -222,7 +242,7 @@
 <style lang="scss">
 	page {
 		background-color: #ededed;
-
+		
 		.headPart {
 			padding: 40rpx 0 0;
 		}

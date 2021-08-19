@@ -21,9 +21,9 @@
 				当前选择日期 {{ chooseTime }}
 			</view>
 			<view v-if="!todoList.length" class="no-task">
-				你尚未添加任何任务<br>
-				点击 '+' 添加一个吧
+				<u-empty  text="列表为空点击 '+' 添加一个吧" mode="list"></u-empty>
 			</view>
+				
 
 			<!-- 未完成任务 -->
 			<view v-if="nocompleted" class="todo-list">
@@ -244,7 +244,7 @@
 				color: #26C6DA;
 				font-size: 40rpx;
 				line-height: 1.5;
-				letter-spacing: 10rpx;
+				// letter-spacing: 10rpx;
 				// text-shadow: 2rpx 2rpx 0rpx #B0BEC5, -2rpx -2rpx 2rpx #FAFAFA;
 				background-color: rgb(250, 250, 250);
 				display: flex;

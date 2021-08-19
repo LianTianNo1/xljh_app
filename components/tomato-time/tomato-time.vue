@@ -63,13 +63,7 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	/* 	import {
-			createNamespacedHelpers
-		} from 'vuex'
-		const {
-			mapState: tomatoState,
-			mapMutations: tomatoMutations,
-		} = createNamespacedHelpers('tomato') */
+
 	export default {
 		props: {
 			startTime: {
@@ -336,7 +330,6 @@
 							this.isSelected = false
 							this.switchBtn = true
 							this.isOpenBtn = true
-							this.nowtask = ''
 							clearInterval(this.timer);
 							// 记录本次番茄时间
 							/* this.tomatoInfo.push({
@@ -348,6 +341,7 @@
 								'taskTime': savaTime
 							})
 
+							this.nowtask = ''
 							// 添加记录
 							// this.tomatoData[this.nowTime] = this.tomatoInfo
 							this.updateTomatoData([this.nowTime, this.tomatoInfo])

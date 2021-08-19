@@ -136,7 +136,7 @@
 			// 获取用户信息
 			async getUser(VueComponent) {
 				const res = await this.$req('getUser')
-				console.log('用户信息', res);
+				// console.log('用户信息', res);
 				if (res.code !== 0) return console.log('获取用户数据失败');
 				console.log('获取用户数据成功');
 				// 保存用户信息
