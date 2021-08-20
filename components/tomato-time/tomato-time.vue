@@ -42,8 +42,15 @@
 			</view>
 		</view>
 		<!-- 图表 -->
-		<view v-if="nowInfo.len<=10" class="charts-box">
+		<!-- <view v-if="nowInfo.len<=10" class="charts-box">
 			<qiun-data-charts type="rose" :chartData="chartData" :echartsApp="true" background="none" />
+		</view> -->
+		<view class="charts-box u-m-t-20">
+		  <qiun-data-charts
+		    type="pie"
+		    :chartData="chartData"
+		    background="none"
+		  />
 		</view>
 
 		<view>
@@ -108,7 +115,7 @@
 				let tempArr = []
 				obj.totoTime = totoTime / 60
 				tempArr = [...Object.keys(this.tomatoData)]
-
+				
 				if (tempArr.length) {
 					obj.len = tempArr.length
 				} else {
@@ -211,6 +218,7 @@
 		},
 		mounted() {
 			// console.log(this.tomatoData);
+			console.log(this.chartData);
 			// 番茄信息为空 从缓存中获取信息
 			if (JSON.stringify(this.tomatoData) === "{}") {
 				const _self = this;

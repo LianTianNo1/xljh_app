@@ -36,7 +36,7 @@ export default new Vuex.Store({
 			state.tomatoInfo.forEach(item => {
 				tempArry.push({
 					name: item.taskName,
-					value: item.taskTime
+					value: item.taskTime/60
 				})
 			})
 			console.log('触发了',state.chartData);

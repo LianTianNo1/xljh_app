@@ -136,8 +136,8 @@
 			// 设置昵称
 			async updateNickName() {
 				if (!this.nickname.trim()) return this.$showt('error', '昵称不能为空')
-				/* let bakcValue = this.getInfo()
-				if(bakcValue !== 'success') return */
+				let bakcValue = await this.getInfo()
+				if(bakcValue !== 'success') return
 				if (this.nickname === this.user.nickname) return this.$showt('error', '昵称似乎毫无改变')
 				const res = await this.$req('setNickName', {
 					nickname: this.nickname
@@ -150,8 +150,8 @@
 			},
 			// 设置头像
 			async setAvatar() {
-				/* let bakcValue = this.getInfo()
-				if(bakcValue !== 'success') return this.$showt('error','错误') */
+				let bakcValue = await this.getInfo()
+				if(bakcValue !== 'success') return this.$showt('error','错误')
 				uni.chooseImage({
 					count: 1,
 					success: (res) => {
@@ -198,7 +198,9 @@
 					return uni.navigateTo({
 						url: '/pages/user-center/login/login'
 					})
-				}else return 'success'
+				}else{
+					return 'success'
+				} 
 			},
 			// 确认退出
 			confirmLogout(){
