@@ -21,9 +21,9 @@
 				当前选择日期 {{ chooseTime }}
 			</view>
 			<view v-if="!todoList.length" class="no-task">
-				<u-empty  text="列表为空点击 '+' 添加一个吧" mode="list"></u-empty>
+				<u-empty text="列表为空点击 '+' 添加一个吧" mode="list"></u-empty>
 			</view>
-				
+
 
 			<!-- 未完成任务 -->
 			<view v-if="nocompleted" class="todo-list">
@@ -83,6 +83,7 @@
 
 <script>
 	import {
+		mapMutations,
 		createNamespacedHelpers
 	} from 'vuex'
 	const {
@@ -139,42 +140,19 @@
 			}
 		},
 		mounted() {
-			
-		},
-		async onPullDownRefresh() {
-			// 刷新更新数据
-			/* let userData = uni.getStorageSync('userData')
-			let userInfo = uni.getStorageSync('user_info')
-			if (userInfo) {
-				// console.log(userInfo);
-				let res2 = await this.$req('savaUserData', {
-					username: userInfo.username,
-					userData
-				}, true)
-				console.log('res2', res2);
-				if (res2.code !== 0) {
-					uni.stopPullDownRefresh();
-					return this.$showt('error', res2.msg)
-				}
-				this.$showt('success', '上传成功！！')
-				uni.stopPullDownRefresh();
-			} else {
-				this.$showt('error', "尚未登录不能同步喔")
-				uni.stopPullDownRefresh();
-			} */
 
-			// this.$getUserData(this)
 		},
+		async onPullDownRefresh() {},
 		methods: {
+			...mapMutations(['setChar']),
 			...tabbarMutations(['setTodoObj']),
 			...listMutations(['setUserData', 'updateTime', 'updateTodoList', 'updateIsCompleted', 'deleteItem',
-				'addItem','updateTodoList2'
+				'addItem', 'updateTodoList2'
 			]),
 			// 切换 tabBar 调用
 			beforeSwitch() {
-				/* let usrInfo = uni.getStorageSync('user_info')
-				usrInfo && uni.removeStorageSync('userData')
-				this.todoObj && this.$getUserData(this.todoObj); */
+				/* // 更新图表
+				this.setChar() */
 			},
 			// 监听改变日期
 			changeDate(e) {

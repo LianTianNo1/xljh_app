@@ -11,6 +11,7 @@
 
 <script>
 	import {
+		mapMutations,
 		createNamespacedHelpers
 	} from 'vuex'
 	const {
@@ -30,16 +31,17 @@
 			...tabbarState(['tabbar', 'todoObj']),
 		},
 		methods: {
+			...mapMutations(['setChar']),
 			// 切换 tabBar 调用
 			beforeSwitch() {
-				/* let usrInfo = uni.getStorageSync('user_info')
-				usrInfo && uni.removeStorageSync('userData')
-				this.todoObj && this.$getUserData(this.todoObj); */
+			/* 	// 更新图表
+				this.setChar() */
 			},
 		},
 		components: {
 			tomatotime
-		}
+		},
+
 	}
 </script>
 

@@ -24,16 +24,9 @@
 			}
 
 		}, {
-			"path": "pages/user-center/login/login",
+			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录/注册",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/user-center/user-info/user-info",
-			"style": {
-				"navigationBarTitleText": "用户信息",
 				"enablePullDownRefresh": false
 			}
 
@@ -55,7 +48,23 @@
 				}
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/about/about",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "关于",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+			"path": "node_modules/uview-ui/components/u-avatar-cropper/u-avatar-cropper",
+			"style": {
+				"navigationBarTitleText": "头像裁剪",
+				"navigationBarBackgroundColor": "#000000"
+			}
+		}
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

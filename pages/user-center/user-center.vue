@@ -4,7 +4,7 @@
 		<u-toast ref="uToast" />
 		<view @click="getInfo" class="headPart u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
 			<view class="u-m-r-10">
-				<u-avatar  :src="user.avatar?user.avatar:pic" size="140"></u-avatar>
+				<u-avatar :src="user.avatar?user.avatar:pic" size="140"></u-avatar>
 			</view>
 			<view class="u-flex-1">
 				<view class="u-font-18 u-p-b-20">{{user.nickname?user.nickname:'暂未设置昵称'}}</view>
@@ -21,24 +21,27 @@
 			</u-modal>
 		</view>
 		<view>
-			<u-modal content="退出将清空本地数据,请确认已经上传"  :show-cancel-button="true" @confirm="confirmLogout" title="确认退出" v-model="logoutShow">
+			<u-modal content="退出将清空本地数据,请确认已经上传" :show-cancel-button="true" @confirm="confirmLogout" title="确认退出"
+				v-model="logoutShow">
 			</u-modal>
 		</view>
 
 
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<u-cell-item :arrow="false" @click="uploadUserData" icon="hourglass-half-fill" title="上传数据"></u-cell-item>
-				<u-cell-item :arrow="false" @click="openModal"  icon="edit-pen" title="修改昵称"></u-cell-item>
-				<u-cell-item :arrow="false" @click="setAvatar"  icon="edit-pen" title="修改头像"></u-cell-item>
-				<u-cell-item :arrow="false" @click="checkUpdate"  icon="download" title="检查更新"></u-cell-item>
-				<u-cell-item :arrow="false" icon="setting" title="设置"></u-cell-item>
+				<u-cell-item :arrow="false" @click="uploadUserData" icon="hourglass-half-fill" title="上传数据">
+				</u-cell-item>
+				<u-cell-item :arrow="false" @click="openModal" icon="edit-pen" title="修改昵称"></u-cell-item>
+				<!-- <u-cell-item :arrow="false" @click="setAvatar" icon="edit-pen" title="修改头像"></u-cell-item> -->
+				<u-cell-item :arrow="false" @tap="chooseAvatar" icon="edit-pen" title="修改头像"></u-cell-item>
+				<u-cell-item :arrow="false" @click="checkUpdate" icon="download" title="检查更新"></u-cell-item>
+				<u-cell-item :arrow="false" @click="logoutShow = true" icon="error-circle" title="退出账号"></u-cell-item>
 			</u-cell-group>
 		</view>
 
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<u-cell-item icon="error-circle" @click="logoutShow = true	" title="退出账号"></u-cell-item>
+				<u-cell-item @click="jumpAbout" icon="info-circle" title="关于"></u-cell-item>
 			</u-cell-group>
 		</view>
 		<u-tabbar @change="beforeSwitch()" :list="tabbar" :mid-button="true"></u-tabbar>
@@ -48,7 +51,6 @@
 
 
 <script>
-	// const upApp import '@/uni_modules/uni-upgrade-center-app/utils/check-update'
 	import upAPP from '../../uni_modules/uni-upgrade-center-app/utils/check-update.js'
 	import {
 		mapState,
@@ -84,7 +86,34 @@
 		},
 		mounted() {
 
-			
+
+		},
+		created() {
+			// 监听从裁剪页发布的事件，获得裁剪结果
+			uni.$on('uAvatarCropper', async path => {
+				let bakcValue = await this.getInfo()
+				if (bakcValue !== 'success') return this.$showt('error', '错误')
+				let filePath = path
+				//进行上传操作
+				uniCloud.uploadFile({
+					filePath: filePath,
+					cloudPath: 'b.jpg',
+					success: async (res2) => {
+						const res3 = await this.$req('setAvatar', {
+							avatar: res2.fileID
+						})
+						if (res3.code !== 0) return this.$showt('error',res3.msg,this.$refs.uToast)
+						this.$showt('success', res3.msg,this.$refs.uToast)
+						// 更新数据到本地
+						this.getUser()
+					},
+					fail: (err) => {
+						return this.$showt('error', "上传图片出错")
+					}
+				})
+				
+
+			})
 		},
 		onLoad() {
 			// vuex 用户信息为空 从缓存中获取信息
@@ -104,9 +133,25 @@
 		},
 
 		methods: {
-			...mapMutations(['updateTomatoData', 'setChartData','updateTomatoInfo', 'setTomatoData', 'setTomatoInfo']),
-			...loginMutations(['updateUser','updateUser2']),
-			...listMutations(['setUserData','clearList']),
+			...mapMutations(['setChar', 'updateTomatoData', 'updateTomatoInfo', 'setTomatoData', 'setTomatoInfo']),
+			...loginMutations(['updateUser', 'updateUser2']),
+			...listMutations(['setUserData', 'clearList']),
+			// 选择头像
+			chooseAvatar() {
+				this.$u.route({
+					// 关于此路径，请见下方"注意事项"
+					url: 'node_modules/uview-ui/components/u-avatar-cropper/u-avatar-cropper',
+					// 内部已设置以下默认参数值，可不传这些参数
+					params: {
+						// 输出图片宽度，高等于宽，单位px
+						destWidth: 300,
+						// 裁剪框宽度，高等于宽，单位px
+						rectWidth: 200,
+						// 输出的图片类型，如果'png'类型发现裁剪的图片太大，改成"jpg"即可
+						fileType: 'jpg',
+					}
+				})
+			},
 			// 打开模态框
 			openModal() {
 				this.modalShow = true
@@ -116,15 +161,17 @@
 				this.$uploadData(this.$refs.uToast)
 			},
 			// 检查更新
-			async checkUpdate(){
-				// const res = await upAPP()
-				// console.log(res);
-				const { result } = await upAPP()
-				if(result.code===-101)return this.$showt('error', result.message)
+			async checkUpdate() {
+				const {
+					result
+				} = await upAPP()
+				if (result.code === -101) return this.$showt('error', result.message)
 				this.$showt('success', result.message)
 			},
 			// 切换 tabBar 调用
 			beforeSwitch() {
+				/* // 更新图表
+				this.setChar() */
 			},
 			// 获取用户信息
 			async getUser() {
@@ -137,7 +184,7 @@
 			async updateNickName() {
 				if (!this.nickname.trim()) return this.$showt('error', '昵称不能为空')
 				let bakcValue = await this.getInfo()
-				if(bakcValue !== 'success') return
+				if (bakcValue !== 'success') return
 				if (this.nickname === this.user.nickname) return this.$showt('error', '昵称似乎毫无改变')
 				const res = await this.$req('setNickName', {
 					nickname: this.nickname
@@ -148,42 +195,10 @@
 				// 设置昵称 为 ''
 				this.nickname = '';
 			},
-			// 设置头像
-			async setAvatar() {
-				let bakcValue = await this.getInfo()
-				if(bakcValue !== 'success') return this.$showt('error','错误')
-				uni.chooseImage({
-					count: 1,
-					success: (res) => {
-						console.log(res);
-						if (res.tempFilePaths.length > 0) {
-							let filePath = res.tempFilePaths[0]
-							//进行上传操作
-							const tempFiles = res.tempFiles[0]
-							const absUrl = tempFiles.path + '/' + tempFiles.name
-							console.log(absUrl);
-							uniCloud.uploadFile({
-								filePath: filePath,
-								cloudPath: 'b.jpg',
-								success: async (res2) => {
-									console.log(res2);
-									const res3 = await this.$req('setAvatar', {
-										avatar: res2.fileID
-									})
-									if (res3.code !== 0) return this.$showt('error', res3.msg)
-									this.$showt('success', res3.msg)
-									// 更新数据到本地
-									this.getUser()
-									console.log(res3);
-								},
-								fail: (err) => {
-									console.log(err);
-									return this.$showt('error', "上传图片出错")
-								}
-							})
-
-						}
-					}
+			// 跳转关于页面
+			jumpAbout() {
+				uni.navigateTo({
+					url: '/pages/about/about'
 				})
 			},
 			// 点击信息详情
@@ -196,20 +211,20 @@
 					await this.logout()
 					// 跳转到登录注册页面
 					return uni.navigateTo({
-						url: '/pages/user-center/login/login'
+						url: '/pages/login/login'
 					})
-				}else{
+				} else {
 					return 'success'
-				} 
+				}
 			},
 			// 确认退出
-			confirmLogout(){
+			confirmLogout() {
 				// 退出
 				this.logout()
 			},
 			// 登出
 			async logout() {
-				
+
 				const res = await this.$req('logout')
 				// console.log(res);
 				// 登出成功
@@ -235,8 +250,8 @@
 				this.clearList()
 				this.setTomatoData({})
 				this.setTomatoInfo([])
-				this.setChartData([])
-				
+				this.setChar()
+
 			}
 
 		}
@@ -246,7 +261,7 @@
 <style lang="scss">
 	page {
 		background-color: #ededed;
-		
+
 		.headPart {
 			padding: 40rpx 0 0;
 		}

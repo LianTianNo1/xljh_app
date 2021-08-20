@@ -1,7 +1,7 @@
 <template>
-	<view class="tomato-wrap u-m-t-55" ref="tomatoWrap">
+	<view class="tomato-wrap u-m-t-25" ref="tomatoWrap">
 		<u-toast ref="uToast" />
-		<view v-if="timeShow" class="countdown u-m-b-25 u-m-t-55">
+		<view v-if="timeShow" class="countdown u-m-b-25 u-m-t-15">
 			<!-- <view v-if="true" class="countdown u-m-b-25 u-m-t-55"> -->
 			<view class="time">{{h<10?'0'+h:h}}</view>
 			<text class="dot">:</text>
@@ -29,6 +29,13 @@
 
 		</view>
 		<image class="tomato-img" v-if="isOpenBtn" src="../../static/material/tomato.png" mode="widthFix"></image>
+		<!-- 图表 -->
+		<view v-show="isOpenBtn" class="charts">
+			<view :reshow="isOpenBtn" class="charts-box">
+				<qiun-data-charts type="pie" :chartData="chartData" background="none" />
+			</view>
+		</view>
+
 		<view class="tomato-info">
 			<view>
 				<u-icon name="pushpin-fill" class="u-m-r-10" color="#E91E63" size="32"></u-icon>
@@ -41,17 +48,7 @@
 				总计 {{ nowInfo.total }} 分钟
 			</view>
 		</view>
-		<!-- 图表 -->
-		<!-- <view v-if="nowInfo.len<=10" class="charts-box">
-			<qiun-data-charts type="rose" :chartData="chartData" :echartsApp="true" background="none" />
-		</view> -->
-		<view class="charts-box u-m-t-20">
-		  <qiun-data-charts
-		    type="pie"
-		    :chartData="chartData"
-		    background="none"
-		  />
-		</view>
+
 
 		<view>
 			<u-modal :show-cancel-button="true" @confirm="setTask" title="设置任务" v-model="taskShow">
@@ -92,7 +89,6 @@
 		},
 		computed: {
 			...mapState(['tomatoData', 'tomatoInfo', 'chartData']),
-			// ...tomatoState(['tomatoData', 'tomatoInfo']),
 			sTime() {
 				return this.startTime
 			},
@@ -109,13 +105,13 @@
 				let arr = [].concat(...Object.values(this.tomatoData))
 				let totoTime = 0
 				arr.forEach(item => {
-					totoTime += item.taskTime
+					totoTime += item.value
 				})
 				let obj = {}
 				let tempArr = []
-				obj.totoTime = totoTime / 60
+				obj.totoTime = totoTime.toFixed(2)
 				tempArr = [...Object.keys(this.tomatoData)]
-				
+
 				if (tempArr.length) {
 					obj.len = tempArr.length
 				} else {
@@ -143,9 +139,9 @@
 				// 统计今天的番茄时间
 				let totalTaskTime = 0
 				nowInfo.forEach(item => {
-					totalTaskTime += item.taskTime
+					totalTaskTime += item.value
 				})
-				obj.total = totalTaskTime / 60
+				obj.total = totalTaskTime.toFixed(2)
 				return obj
 			}
 		},
@@ -218,7 +214,6 @@
 		},
 		mounted() {
 			// console.log(this.tomatoData);
-			console.log(this.chartData);
 			// 番茄信息为空 从缓存中获取信息
 			if (JSON.stringify(this.tomatoData) === "{}") {
 				const _self = this;
@@ -235,16 +230,15 @@
 						this.setTomatoInfo(tempInfo)
 						// 更新图表
 						this.setChar()
-						/* console.log(tempArry);
-						console.log(this.chartData); */
 					}
+
 
 				}
 			}
 			this.crateTime()
 			this.list.unshift({
 				value: 0.05,
-				label: `3  s`
+				label: `3 s测试用`
 			})
 			this.list = [...this.preTime, ...this.list]
 		},
@@ -351,18 +345,14 @@
 							this.isOpenBtn = true
 							clearInterval(this.timer);
 							// 记录本次番茄时间
-							/* this.tomatoInfo.push({
-								'taskName': this.nowtask,
-								'taskTime': savaTime
-							}) */
+
 							this.updateTomatoInfo({
-								'taskName': this.nowtask,
-								'taskTime': savaTime
+								'name': this.nowtask,
+								'value': savaTime / 60
 							})
 
 							this.nowtask = ''
 							// 添加记录
-							// this.tomatoData[this.nowTime] = this.tomatoInfo
 							this.updateTomatoData([this.nowTime, this.tomatoInfo])
 							// 更新图表
 							this.setChar()
@@ -402,17 +392,20 @@
 		.tomato-wrap {
 			width: 95vw;
 			border-radius: 20rpx;
-			background-color: #F5F5F5;
+			background-color: rgb(250,250,250);
 			box-shadow: 2rpx 2rpx 2rpx 2rpx #CFD8DC, -2rpx -2rpx 2rpx 2rpx #FAFAFA;
 			box-sizing: border-box;
-			padding: 20rpx;
+			padding: 10rpx 0 20rpx;
 			display: flex;
 			justify-content: center;
 			flex-wrap: wrap;
 
 			.tomato-img {
-				width: 300rpx;
-				margin: 20rpx 0 40rpx;
+
+				// width: 300rpx;
+				width: 0rpx;
+				height: 0rpx;
+				margin: 5rpx 0;
 			}
 
 			.setting {

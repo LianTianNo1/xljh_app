@@ -19,39 +19,32 @@ export default new Vuex.Store({
 		// 用来储存 番茄记录
 		tomatoData: {},
 		// 每一个番茄
-		tomatoInfo: [],	
+		tomatoInfo: [],
 		// 图表数据
 		chartData: {
 			categories: [],
-			series: [{data:[]}]
+			series: [{
+				data: []
+			}]
 		},
-
-
 	},
 	// 用来处理状态
 	mutations: {
 		// 设置图表
-		setChar(state){
-			let tempArry = []
-			state.tomatoInfo.forEach(item => {
-				tempArry.push({
-					name: item.taskName,
-					value: item.taskTime/60
-				})
-			})
-			console.log('触发了',state.chartData);
-			state.chartData.series[0].data = tempArry
+		setChar(state) {
+			state.chartData.series[0].data = [...state.tomatoInfo]
+			console.log('触发了', state.chartData.series[0].data);
 		},
 		// 设置图表数据
-		 setChartData(state, payload) {
+		setChartData(state, payload) {
 			state.chartData.series[0].data = payload
 		},
 		// 更新番茄记录
-		 updateTomatoData(state, payload) {
+		updateTomatoData(state, payload) {
 			state.tomatoData[payload[0]] = payload[1]
 		},
 		// 更新番茄
-		 updateTomatoInfo(state, payload) {
+		updateTomatoInfo(state, payload) {
 			state.tomatoInfo.push(payload)
 		},
 		// 设置番茄记录
@@ -59,7 +52,7 @@ export default new Vuex.Store({
 			state.tomatoData = payload
 		},
 		// 设置番茄
-		 setTomatoInfo(state, payload) {
+		setTomatoInfo(state, payload) {
 			state.tomatoInfo = payload
 		},
 	},

@@ -108,7 +108,7 @@
 		},
 		methods: {
 			...listMutations(['setUserData', 'updateTodoList2', 'setChooseTime']),
-			...mapMutations(['setTomatoData', 'setTomatoInfo', 'setChar','setChartData']),
+			...mapMutations(['setTomatoData', 'setTomatoInfo', 'setChar']),
 			...loginMutations(['updateUser']),
 
 			// 刷新验证码
@@ -163,7 +163,7 @@
 				this.setTomatoData(tomatoData)
 				// 获取数据
 				let tempInfo = tomatoData[this.$formatDate(new Date())]
-				if (!tempInfo || tempInfo === undefined || tempInfo === null || tempInfo === '') {
+				if (!Array.isArray(tempInfo) || !tempInfo || tempInfo === undefined || tempInfo === null || tempInfo === '') {
 					this.setTomatoInfo([])
 				} else {
 					this.setTomatoInfo(tempInfo)
@@ -171,7 +171,6 @@
 				}
 				// 更新图表
 				this.setChar()
-				// this.setTomatoInfo(tomatoData[this.$formatDate(new Date())])
 				uni.setStorageSync('userData', userData)
 				uni.setStorageSync('tomatoData', tomatoData)
 				this.setChooseTime(this.$formatDate(new Date()))
