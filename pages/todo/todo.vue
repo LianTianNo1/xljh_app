@@ -118,6 +118,7 @@
 			...listState(['todoList', 'userData', 'chooseTime']),
 			...listGetters(['completed', 'nocompleted', 'totalcompleted'])
 		},
+
 		onLoad() {
 			// 获取数据
 			// vuex 用户信息为空 从缓存中获取信息

@@ -30,8 +30,8 @@
 		</view>
 		<image class="tomato-img" v-if="isOpenBtn" src="../../static/material/tomato.png" mode="widthFix"></image>
 		<!-- 图表 -->
-		<view v-show="isOpenBtn" class="charts">
-			<view :reshow="isOpenBtn" class="charts-box">
+		<view  class="charts">
+			<view class="charts-box">
 				<qiun-data-charts type="pie" :chartData="chartData" background="none" />
 			</view>
 		</view>
@@ -121,6 +121,7 @@
 			},
 			// 今日专注信息
 			nowInfo() {
+				console.log('今日');
 				if (this.tomatoData.size === 0 || JSON.stringify(this.tomatoData) === '{}') return {
 					len: 0,
 					total: 0
@@ -358,6 +359,7 @@
 							this.setChar()
 							// 保存到缓存
 							uni.setStorageSync('tomatoData', this.tomatoData)
+							console.log('tomatoInfo:',this.tomatoInfo);
 							// 震动手机
 							uni.vibrateLong({
 								success: function() {

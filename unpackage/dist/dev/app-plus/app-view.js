@@ -5008,25 +5008,11 @@ var render = function() {
         : _vm._e(),
       _c(
         "v-uni-view",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm._$g(22, "v-show"),
-              expression: "_$g(22,'v-show')"
-            }
-          ],
-          staticClass: _vm._$g(22, "sc"),
-          attrs: { _i: 22 }
-        },
+        { staticClass: _vm._$g(22, "sc"), attrs: { _i: 22 } },
         [
           _c(
             "v-uni-view",
-            {
-              staticClass: _vm._$g(23, "sc"),
-              attrs: { reshow: _vm._$g(23, "a-reshow"), _i: 23 }
-            },
+            { staticClass: _vm._$g(23, "sc"), attrs: { _i: 23 } },
             [_c("qiun-data-charts", { attrs: { _i: 24 } })],
             1
           )
@@ -15890,15 +15876,7 @@ var render = function() {
       _c("u-toast", { ref: "uToast", attrs: { _i: 2 } }),
       _c(
         "v-uni-view",
-        {
-          staticClass: _vm._$g(3, "sc"),
-          attrs: { _i: 3 },
-          on: {
-            click: function($event) {
-              return _vm.$handleViewEvent($event)
-            }
-          }
-        },
+        { staticClass: _vm._$g(3, "sc"), attrs: { _i: 3 } },
         [
           _c(
             "v-uni-view",
@@ -16038,6 +16016,14 @@ var render = function() {
                     return _vm.$handleViewEvent($event)
                   }
                 }
+              }),
+              _c("u-cell-item", {
+                attrs: { _i: 22 },
+                on: {
+                  click: function($event) {
+                    return _vm.$handleViewEvent($event)
+                  }
+                }
               })
             ],
             1
@@ -16047,14 +16033,14 @@ var render = function() {
       ),
       _c(
         "v-uni-view",
-        { staticClass: _vm._$g(22, "sc"), attrs: { _i: 22 } },
+        { staticClass: _vm._$g(23, "sc"), attrs: { _i: 23 } },
         [
           _c(
             "u-cell-group",
-            { attrs: { _i: 23 } },
+            { attrs: { _i: 24 } },
             [
               _c("u-cell-item", {
-                attrs: { _i: 24 },
+                attrs: { _i: 25 },
                 on: {
                   click: function($event) {
                     return _vm.$handleViewEvent($event)
@@ -16068,7 +16054,7 @@ var render = function() {
         1
       ),
       _c("u-tabbar", {
-        attrs: { _i: 25 },
+        attrs: { _i: 26 },
         on: {
           change: function($event) {
             return _vm.$handleViewEvent($event)
@@ -18807,100 +18793,60 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-uni-view",
-    { staticClass: _vm._$g(0, "sc"), attrs: { _i: 0 } },
+    { staticClass: _vm._$g(0, "sc"), style: _vm._$g(0, "s"), attrs: { _i: 0 } },
     [
       _c("u-navbar", { attrs: { _i: 1 } }),
+      _vm._$g(2, "i")
+        ? _c("v-uni-view", {
+            ref: "aboutInfo",
+            staticClass: _vm._$g(2, "sc"),
+            attrs: { _i: 2 },
+            domProps: { innerHTML: _vm._s(_vm._$g(2, "v-html")) }
+          })
+        : _vm._e(),
       _c(
         "v-uni-view",
-        { staticClass: _vm._$g(2, "sc"), attrs: { _i: 2 } },
-        [
-          _vm._v("各位用户你们好，很荣幸大家使用本软件"),
-          _c("br", { attrs: { _i: 3 } }),
-          _vm._v("我是这个软件的开发者小浪"),
-          _c("br", { attrs: { _i: 4 } }),
-          _vm._v("目前是一位大三学生"),
-          _c("br", { attrs: { _i: 5 } }),
-          _vm._v("功能很简单，实现起来却是...."),
-          _c("br", { attrs: { _i: 6 } }),
-          _vm._v("不说了都是头发"),
-          _c("br", { attrs: { _i: 7 } }),
-          _vm._v("希望这个软件能够给您的生活提供便利"),
-          _c("br", { attrs: { _i: 8 } }),
-          _vm._v("项目开源是用 uni-app 开发"),
-          _c("br", { attrs: { _i: 9 } }),
-          _vm._v("下面是项目的地址 github"),
-          _c("br", { attrs: { _i: 10 } }),
-          _vm._v("链接点击就可以复制"),
-          _c("br", { attrs: { _i: 11 } }),
-          _vm._v("感兴趣的伙伴可以看看"),
-          _c("br", { attrs: { _i: 12 } }),
-          _vm._v("欢迎大家 star"),
-          _c("br", { attrs: { _i: 13 } }),
-          _vm._v("github 有时候抽风你可能访问不了"),
-          _c("br", { attrs: { _i: 14 } }),
-          _vm._v("项目我会继续优化和更新"),
-          _c("br", { attrs: { _i: 15 } }),
-          _vm._v("留个联系方式吧：QQ1584731441"),
-          _c("br", { attrs: { _i: 16 } }),
-          _vm._v("或者通过 github 联系我"),
-          _c("br", { attrs: { _i: 17 } }),
-          _vm._v("留下您宝贵的提议"),
-          _c("br", { attrs: { _i: 18 } }),
-          _vm._v("欢迎大家交流"),
-          _c("br", { attrs: { _i: 19 } }),
-          _vm._v("最下面是我的博客地址"),
-          _c("br", { attrs: { _i: 20 } }),
-          _vm._v("欢迎大家访问"),
-          _c("br", { attrs: { _i: 21 } })
-        ],
-        1
-      ),
-      _c(
-        "v-uni-view",
-        { staticClass: _vm._$g(22, "sc"), attrs: { _i: 22 } },
+        { staticClass: _vm._$g(3, "sc"), attrs: { _i: 3 } },
         [
           _c(
             "v-uni-view",
-            { staticClass: _vm._$g(23, "sc"), attrs: { _i: 23 } },
+            { staticClass: _vm._$g(4, "sc"), attrs: { _i: 4 } },
             [
-              _c("u-icon", {
-                staticClass: _vm._$g(24, "sc"),
-                attrs: { _i: 24 }
-              }),
+              _c("u-icon", { staticClass: _vm._$g(5, "sc"), attrs: { _i: 5 } }),
               _c(
                 "v-uni-text",
                 {
-                  attrs: { _i: 25 },
+                  attrs: { _i: 6 },
                   on: {
                     click: function($event) {
                       return _vm.$handleViewEvent($event)
                     }
                   }
                 },
-                [_vm._v(_vm._$g(25, "t0-0"))]
+                [_vm._v(_vm._$g(6, "t0-0"))]
               )
             ],
             1
           ),
           _c(
             "v-uni-view",
-            { staticClass: _vm._$g(26, "sc"), attrs: { _i: 26 } },
+            { staticClass: _vm._$g(7, "sc"), attrs: { _i: 7 } },
             [
               _c("v-uni-image", {
-                staticClass: _vm._$g(27, "sc"),
-                attrs: { src: _vm._$g(27, "a-src"), mode: "widthFix", _i: 27 }
+                staticClass: _vm._$g(8, "sc"),
+                attrs: { src: _vm._$g(8, "a-src"), mode: "widthFix", _i: 8 }
               }),
               _c(
                 "v-uni-text",
                 {
-                  attrs: { _i: 28 },
+                  attrs: { _i: 9 },
                   on: {
                     click: function($event) {
                       return _vm.$handleViewEvent($event)
                     }
                   }
                 },
-                [_vm._v(_vm._$g(28, "t0-0"))]
+                [_vm._v(_vm._$g(9, "t0-0"))]
               )
             ],
             1
@@ -19000,7 +18946,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ./node_modules/css-loader/dist/runtime/api.js */ 16);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* uview-ui */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\nbody[data-v-2d00db72] {\r\n  height: 90vh;\r\n  background-color: #ededed;\r\n  /* background-image: url('https://gitee.com/lang-tian/image_upload/raw/master/img/DFCC97D310F648EC7F7E3AA8A5E40EE7.jpg');\r\n\tbackground-size: 100% 100%;\r\n\tbackground-position: center; */\r\n  background-image: -webkit-linear-gradient(top left, #AD18F9, #05DFC7);\r\n  background-image: linear-gradient(to bottom right, #AD18F9, #05DFC7);\n}\nbody .content[data-v-2d00db72] {\r\n  height: 90vh;\r\n  display: -webkit-box;\r\n  display: -webkit-flex;\r\n  display: flex;\r\n  -webkit-box-pack: center;\r\n  -webkit-justify-content: center;\r\n          justify-content: center;\r\n  -webkit-box-align: start;\r\n  -webkit-align-items: flex-start;\r\n          align-items: flex-start;\r\n  -webkit-flex-wrap: wrap;\r\n          flex-wrap: wrap;\r\n  margin-top: 170rpx;\n}\nbody .content .info[data-v-2d00db72] {\r\n  text-align: center;\r\n  width: 97vw;\r\n  padding: 20rpx;\r\n  font-size: 30rpx;\r\n  line-height: 1.5;\r\n  letter-spacing: 5rpx;\r\n  border-radius: 20rpx;\r\n  color: #2E94B9;\r\n  background-color: #F8F9FC;\r\n  box-shadow: 2rpx 2rpx 1rpx 1rpx #C5CAE9, -1rpx -1rpx 1rpx 1rpx #f5f4e8;\r\n  margin-bottom: 20rpx;\n}\nbody .content .address[data-v-2d00db72] {\r\n  width: 97vw;\r\n  display: -webkit-box;\r\n  display: -webkit-flex;\r\n  display: flex;\r\n  -webkit-box-pack: center;\r\n  -webkit-justify-content: center;\r\n          justify-content: center;\r\n  -webkit-flex-wrap: wrap;\r\n          flex-wrap: wrap;\r\n  border-radius: 20rpx;\r\n  background-color: #F5F7FA;\r\n  box-shadow: 2rpx 2rpx 1rpx 1rpx #C5CAE9, -1rpx -1rpx 1rpx 1rpx #f5f4e8;\n}\nbody .content .address uni-view[data-v-2d00db72] {\r\n  display: -webkit-box;\r\n  display: -webkit-flex;\r\n  display: flex;\r\n  -webkit-box-pack: center;\r\n  -webkit-justify-content: center;\r\n          justify-content: center;\r\n  -webkit-box-align: center;\r\n  -webkit-align-items: center;\r\n          align-items: center;\r\n  -webkit-flex-wrap: wrap;\r\n          flex-wrap: wrap;\n}\nbody .content .address uni-view uni-image[data-v-2d00db72] {\r\n  width: 40rpx;\n}\r\n", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* uview-ui */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\nbody[data-v-2d00db72] {\r\n  height: 100vh;\n}\nbody .content[data-v-2d00db72] {\r\n  height: 100vh;\r\n  display: -webkit-box;\r\n  display: -webkit-flex;\r\n  display: flex;\r\n  -webkit-box-pack: center;\r\n  -webkit-justify-content: center;\r\n          justify-content: center;\r\n  -webkit-box-align: start;\r\n  -webkit-align-items: flex-start;\r\n          align-items: flex-start;\r\n  -webkit-flex-wrap: wrap;\r\n          flex-wrap: wrap;\r\n  padding-top: 170rpx;\n}\nbody .content .info[data-v-2d00db72] {\r\n  text-align: center;\r\n  width: 97vw;\r\n  padding: 50rpx 20rpx;\r\n  font-size: 30rpx;\r\n  line-height: 1.5;\r\n  letter-spacing: 5rpx;\r\n  border-radius: 20rpx;\r\n  color: #2E94B9;\r\n  background-color: rgba(80, 193, 233, 0.1);\r\n  box-shadow: 2rpx 2rpx 1rpx 1rpx #dddfe6, -1rpx -1rpx 1rpx 1rpx #f5f4e8;\r\n  margin-bottom: 20rpx;\n}\nbody .content .address[data-v-2d00db72] {\r\n  width: 97vw;\r\n  display: -webkit-box;\r\n  display: -webkit-flex;\r\n  display: flex;\r\n  -webkit-box-pack: center;\r\n  -webkit-justify-content: center;\r\n          justify-content: center;\r\n  -webkit-flex-wrap: wrap;\r\n          flex-wrap: wrap;\r\n  border-radius: 20rpx;\r\n  background-color: #FFFFFF;\r\n  box-shadow: 2rpx 2rpx 1rpx 1rpx #dddfe6, -1rpx -1rpx 1rpx 1rpx #f5f4e8;\n}\nbody .content .address uni-view[data-v-2d00db72] {\r\n  display: -webkit-box;\r\n  display: -webkit-flex;\r\n  display: flex;\r\n  -webkit-box-pack: center;\r\n  -webkit-justify-content: center;\r\n          justify-content: center;\r\n  -webkit-box-align: center;\r\n  -webkit-align-items: center;\r\n          align-items: center;\r\n  -webkit-flex-wrap: wrap;\r\n          flex-wrap: wrap;\n}\nbody .content .address uni-view uni-image[data-v-2d00db72] {\r\n  width: 40rpx;\n}\r\n", ""]);
 // Exports
 module.exports = exports;
 

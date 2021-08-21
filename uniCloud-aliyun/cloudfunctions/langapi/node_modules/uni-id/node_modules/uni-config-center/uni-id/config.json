@@ -10,7 +10,7 @@
     "forceInviteCode": false,
   "removePermissionAndRoleFromToken": false,
     "app-plus": {
-        "tokenExpiresIn": 2592000,
+        "tokenExpiresIn": 86400000,
         "oauth": {
             "weixin": {
                 "appid": "weixin appid",

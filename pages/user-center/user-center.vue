@@ -2,7 +2,7 @@
 	<view>
 		<u-navbar :is-back='false' title="个人中心"></u-navbar>
 		<u-toast ref="uToast" />
-		<view @click="getInfo" class="headPart u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
+		<view  class="headPart u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
 			<view class="u-m-r-10">
 				<u-avatar :src="user.avatar?user.avatar:pic" size="140"></u-avatar>
 			</view>
@@ -29,10 +29,10 @@
 
 		<view class="u-m-t-20">
 			<u-cell-group>
+				<u-cell-item :arrow="false" @click="getInfo" icon="man-add" title="登录/注册"></u-cell-item>
 				<u-cell-item :arrow="false" @click="uploadUserData" icon="hourglass-half-fill" title="上传数据">
 				</u-cell-item>
 				<u-cell-item :arrow="false" @click="openModal" icon="edit-pen" title="修改昵称"></u-cell-item>
-				<!-- <u-cell-item :arrow="false" @click="setAvatar" icon="edit-pen" title="修改头像"></u-cell-item> -->
 				<u-cell-item :arrow="false" @tap="chooseAvatar" icon="edit-pen" title="修改头像"></u-cell-item>
 				<u-cell-item :arrow="false" @click="checkUpdate" icon="download" title="检查更新"></u-cell-item>
 				<u-cell-item :arrow="false" @click="logoutShow = true" icon="error-circle" title="退出账号"></u-cell-item>
@@ -214,6 +214,7 @@
 						url: '/pages/login/login'
 					})
 				} else {
+					this.$showt('success', '当前已经登录')
 					return 'success'
 				}
 			},

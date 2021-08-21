@@ -11,6 +11,7 @@
 
 <script>
 	import {
+		mapState,
 		mapMutations,
 		createNamespacedHelpers
 	} from 'vuex'
@@ -27,15 +28,40 @@
 				enTime: '2020-01-01 00:30:00',
 			}
 		},
+		onShow() {
+			console.log('show');
+			// 番茄信息为空 从缓存中获取信息
+			if (JSON.stringify(this.tomatoData) === "{}") {
+				const _self = this;
+				// 获取数据
+				let tempData = uni.getStorageSync('tomatoData')
+				if (JSON.stringify(tempData) === '{}' || tempData === '') {
+					this.setTomatoData({})
+				} else {
+					this.setTomatoData(tempData)
+					let tempInfo = tempData[this.nowTime]
+					if (!tempInfo || tempInfo === undefined || tempInfo === null || tempInfo === '') {
+						this.setTomatoInfo([])
+					} else {
+						this.setTomatoInfo(tempInfo)
+						// 更新图表
+						this.setChar()
+					}
+
+
+				}
+			}
+		},
 		computed: {
+			...mapState(['tomatoData']),
 			...tabbarState(['tabbar', 'todoObj']),
 		},
 		methods: {
-			...mapMutations(['setChar']),
+			...mapMutations(['setChar', 'setTomatoData', 'setTomatoInfo']),
 			// 切换 tabBar 调用
 			beforeSwitch() {
-			/* 	// 更新图表
-				this.setChar() */
+				/* 	// 更新图表
+					this.setChar() */
 			},
 		},
 		components: {
@@ -53,6 +79,6 @@
 		display: flex;
 		justify-content: center;
 		// align-items: center;
-		
+
 	}
 </style>
